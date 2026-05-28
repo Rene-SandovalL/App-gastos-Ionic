@@ -22,13 +22,12 @@ import {
 import { addIcons } from 'ionicons';
 import {add,arrowUpOutline,cafeOutline,calendarOutline,carOutline,cartOutline,chevronForward,homeOutline,listOutline,notificationsOutline,personCircle,qrCodeOutline,receiptOutline,restaurantOutline,statsChartOutline,trendingUp,} from 'ionicons/icons';
 import { Router } from '@angular/router';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent,    IonAvatar,
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent,    IonAvatar,
     IonButton,
     IonButtons,
     IonContent,
