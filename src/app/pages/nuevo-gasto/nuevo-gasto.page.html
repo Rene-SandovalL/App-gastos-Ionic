@@ -1,17 +1,82 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>nuevo-gasto</ion-title>
-
-    <ion-buttons slot="start" >
-      <ion-back-button defaultHref="/home"></ion-back-button>
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">Nuevo gasto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="person-circle" size="large"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">nuevo-gasto</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="nuevo-gasto-content">
+  <div class="page">
+    <div class="photo-card">
+      <div class="photo-preview"></div>
+    </div>
+
+    <div class="form-card">
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked">Concepto</ion-label>
+        <ion-input placeholder="¿En qué gastaste hoy?"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked">Monto</ion-label>
+        <ion-input placeholder="$ 0.00"></ion-input>
+      </ion-item>
+
+      <div class="form-row">
+        <ion-item lines="none" class="form-item half">
+          <ion-label position="stacked">Fecha</ion-label>
+          <ion-input placeholder="05/22/2026"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-item half">
+          <ion-label position="stacked">Categoría</ion-label>
+          <ion-select placeholder="Seleccionar">
+            <ion-select-option value="comida">Comida</ion-select-option>
+            <ion-select-option value="servicios">Servicios</ion-select-option>
+            <ion-select-option value="salud">Salud</ion-select-option>
+            <ion-select-option value="transporte">Transporte</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="method-section">
+        <p class="section-label">Método de pago</p>
+        <ion-segment value="efectivo">
+          <ion-segment-button value="efectivo">
+            <ion-label>Efectivo</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="tarjeta">
+            <ion-label>Tarjeta</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="transferencia">
+            <ion-label>Transfe</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked">Notas</ion-label>
+        <ion-textarea placeholder="Agrega más detalles aquí..."></ion-textarea>
+      </ion-item>
+    </div>
+
+    <div class="form-actions">
+      <ion-button expand="block" class="primary-action">Guardar</ion-button>
+      <ion-button expand="block" fill="outline" class="secondary-action">Cancelar</ion-button>
+    </div>
+
+    <div class="scan-card">
+      <p>Puedes ingresar el gasto manualmente o escanear un ticket para que la IA lo haga por ti.</p>
+      <ion-button expand="block" fill="clear" class="scan-button">
+        <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+        Escanear ticket
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

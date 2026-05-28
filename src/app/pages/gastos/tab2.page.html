@@ -1,15 +1,112 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="person-circle" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large">Gasto Fácil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="search" size="large"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="ellipsis-vertical" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="gastos-content">
+  <div class="page">
+    <h1 class="page-title">Mis gastos</h1>
+
+    <ion-searchbar placeholder="¿En qué gastaste hoy?" class="search-input"></ion-searchbar>
+
+    <div class="filter-row">
+      <ion-chip class="filter-chip">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Fecha</ion-label>
+      </ion-chip>
+      <div class="filter-divider"></div>
+      <ion-chip class="filter-chip active">
+        <ion-label>Todos</ion-label>
+      </ion-chip>
+      <ion-chip class="filter-chip">
+        <ion-label>Comida</ion-label>
+      </ion-chip>
+    </div>
+
+    <div class="expense-list">
+      <div class="expense-card">
+        <div class="expense-icon servicios">
+          <ion-icon name="wifi-outline"></ion-icon>
+        </div>
+        <div class="expense-info">
+          <h3>Pago de internet</h3>
+          <div class="expense-meta">
+            <span class="tag servicios">Servicios</span>
+            <span class="date">05/10</span>
+          </div>
+        </div>
+        <div class="expense-amount">$600.00</div>
+      </div>
+
+      <div class="expense-card">
+        <div class="expense-icon salud">
+          <ion-icon name="medkit-outline"></ion-icon>
+        </div>
+        <div class="expense-info">
+          <h3>Compra en farmacia</h3>
+          <div class="expense-meta">
+            <span class="tag salud">Salud</span>
+            <span class="date">04/10</span>
+          </div>
+        </div>
+        <div class="expense-amount">$230.00</div>
+      </div>
+
+      <div class="expense-card">
+        <div class="expense-icon transporte">
+          <ion-icon name="car-outline"></ion-icon>
+        </div>
+        <div class="expense-info">
+          <h3>Transporte en taxi</h3>
+          <div class="expense-meta">
+            <span class="tag transporte">Transporte</span>
+            <span class="date">03/10</span>
+          </div>
+        </div>
+        <div class="expense-amount">$150.00</div>
+      </div>
+
+      <div class="expense-card">
+        <div class="expense-icon comida">
+          <ion-icon name="cafe-outline"></ion-icon>
+        </div>
+        <div class="expense-info">
+          <h3>Comida en cafetería</h3>
+          <div class="expense-meta">
+            <span class="tag comida">Comida</span>
+            <span class="date">02/10</span>
+          </div>
+        </div>
+        <div class="expense-amount">$120.00</div>
+      </div>
+    </div>
+
+    <div class="empty-state">
+      <div class="empty-illustration">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </div>
+      <p>¿No encuentras lo que buscas?</p>
+      <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

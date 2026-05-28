@@ -1,15 +1,55 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="person-circle" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large">Gasto Fácil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="icon-button">
+        <ion-label>Escanear ticket</ion-label>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="scan-content">
+  <div class="page">
+    <div class="scan-preview">
+      <div class="scan-frame">
+        <div class="scan-guide"></div>
+      </div>
+      <div class="scan-hint">Alinea el ticket con el recuadro</div>
+    </div>
+
+    <div class="scan-actions">
+      <ion-button expand="block" class="primary-action">
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        Tomar foto
+      </ion-button>
+      <ion-button expand="block" fill="outline" class="secondary-action">
+        <ion-icon slot="start" name="image-outline"></ion-icon>
+        Galería
+      </ion-button>
+    </div>
+
+    <div class="recent-capture">
+      <div class="capture-thumb"></div>
+      <div class="capture-info">
+        <p>Captura reciente</p>
+        <strong>Ticket_20231024_123.jpg</strong>
+      </div>
+      <ion-button fill="clear" class="delete-button">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-button expand="block" class="ai-button">
+      <ion-icon slot="start" name="sparkles"></ion-icon>
+      Analizar con IA
+    </ion-button>
+
+    <p class="scan-note">Nuestra IA detectará automáticamente montos, fechas y categorías.</p>
+  </div>
 </ion-content>
