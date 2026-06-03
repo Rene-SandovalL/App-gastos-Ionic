@@ -10,33 +10,27 @@ import {
   IonBackButton,
   IonButton,
   IonIcon,
-  IonItem,
-  IonLabel,
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonSegment,
-  IonSegmentButton,
-  IonTextarea,
-} from '@ionic/angular/standalone';
+  IonTextarea, IonDatetimeButton, IonModal, IonDatetime } from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, personCircle, calendarOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-nuevo-gasto',
   templateUrl: './nuevo-gasto.page.html',
   styleUrls: ['./nuevo-gasto.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonDatetime, IonModal, IonDatetimeButton,
     IonBackButton,
     IonButtons,
     IonButton,
     IonIcon,
-    IonItem,
-    IonLabel,
     IonInput,
     IonSelect,
     IonSelectOption,
-    IonSegment,
-    IonSegmentButton,
     IonTextarea,
     IonContent,
     IonHeader,
@@ -48,9 +42,21 @@ import {
 })
 export class NuevoGastoPage implements OnInit {
 
-  constructor() { }
+  metodoSeleccionado: string = 'efectivo';
+
+  constructor() {
+    addIcons({
+      arrowBackOutline,
+      personCircle,
+      calendarOutline
+    });
+  }
 
   ngOnInit() {
+  }
+
+  seleccionarMetodo(metodo: string) {
+    this.metodoSeleccionado = metodo;
   }
 
 }

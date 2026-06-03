@@ -1,79 +1,123 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="top-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+      <ion-back-button
+        defaultHref="/tabs/tab1"
+        icon="arrow-back-outline"
+        text=""
+        color="primary"
+        size="large"
+      >
+      </ion-back-button>
     </ion-buttons>
-    <ion-title size="large">Nuevo gasto</ion-title>
+    <ion-title size="large">Nuevo Gasto</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="person-circle" size="large"></ion-icon>
+        <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="nuevo-gasto-content">
-  <div class="page">
-    <div class="photo-card">
-      <div class="photo-preview"></div>
+<ion-content class="nuevo-gasto-content">
+  <div class="page-container">
+    <div class="photo-preview"></div>
+
+    <p class="input-label">Concepto</p>
+    <div class="custom-bubble">
+      <ion-input placeholder="¿En qué gastaste hoy?"></ion-input>
     </div>
 
-    <div class="form-card">
-      <ion-item lines="none" class="form-item">
-        <ion-label position="stacked">Concepto</ion-label>
-        <ion-input placeholder="¿En qué gastaste hoy?"></ion-input>
-      </ion-item>
+    <p class="input-label">Monto</p>
+    <div class="custom-bubble monto-bubble">
+      <span class="currency-sign">$</span>
+      <ion-input placeholder="0.00"></ion-input>
+    </div>
 
-      <ion-item lines="none" class="form-item">
-        <ion-label position="stacked">Monto</ion-label>
-        <ion-input placeholder="$ 0.00"></ion-input>
-      </ion-item>
+    <div class="form-row">
+      <div class="col-half">
+        <p class="input-label">Fecha</p>
 
-      <div class="form-row">
-        <ion-item lines="none" class="form-item half">
-          <ion-label position="stacked">Fecha</ion-label>
-          <ion-input placeholder="05/22/2026"></ion-input>
-        </ion-item>
-        <ion-item lines="none" class="form-item half">
-          <ion-label position="stacked">Categoría</ion-label>
-          <ion-select placeholder="Seleccionar">
+        <div class="custom-bubble date-bubble">
+          <ion-datetime-button
+            datetime="calendario-gasto"
+          ></ion-datetime-button>
+
+          <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="calendario-gasto"
+                presentation="date"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </div>
+      </div>
+
+      <div class="col-half">
+        <p class="input-label">Categoría</p>
+        <div class="custom-bubble">
+          <ion-select placeholder="Seleccionar" interface="popover">
             <ion-select-option value="comida">Comida</ion-select-option>
             <ion-select-option value="servicios">Servicios</ion-select-option>
-            <ion-select-option value="salud">Salud</ion-select-option>
             <ion-select-option value="transporte">Transporte</ion-select-option>
+            <ion-select-option value="salud">Salud</ion-select-option>
+            <ion-select-option value="otros">Otros</ion-select-option>
           </ion-select>
-        </ion-item>
+        </div>
       </div>
-
-      <div class="method-section">
-        <p class="section-label">Método de pago</p>
-        <ion-segment value="efectivo">
-          <ion-segment-button value="efectivo">
-            <ion-label>Efectivo</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="tarjeta">
-            <ion-label>Tarjeta</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="transferencia">
-            <ion-label>Transfe</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-      </div>
-
-      <ion-item lines="none" class="form-item">
-        <ion-label position="stacked">Notas</ion-label>
-        <ion-textarea placeholder="Agrega más detalles aquí..."></ion-textarea>
-      </ion-item>
     </div>
 
-    <div class="form-actions">
-      <ion-button expand="block" class="primary-action">Guardar</ion-button>
-      <ion-button expand="block" fill="outline" class="secondary-action">Cancelar</ion-button>
+    <p class="input-label">Método de pago</p>
+    <div class="payment-methods">
+      <div
+        class="method-pill"
+        [class.active]="metodoSeleccionado === 'efectivo'"
+        (click)="seleccionarMetodo('efectivo')"
+      >
+        Efectivo
+      </div>
+
+      <div
+        class="method-pill"
+        [class.active]="metodoSeleccionado === 'tarjeta'"
+        (click)="seleccionarMetodo('tarjeta')"
+      >
+        Tarjeta
+      </div>
+
+      <div
+        class="method-pill"
+        [class.active]="metodoSeleccionado === 'transferencia'"
+        (click)="seleccionarMetodo('transferencia')"
+      >
+        Transferencia
+      </div>
     </div>
 
-    <div class="scan-card">
-      <p>Puedes ingresar el gasto manualmente o escanear un ticket para que la IA lo haga por ti.</p>
-      <ion-button expand="block" fill="clear" class="scan-button">
+    <p class="input-label">Notas</p>
+    <div class="custom-bubble">
+      <ion-textarea
+        placeholder="Agrega más detalles aquí..."
+        rows="3"
+      ></ion-textarea>
+    </div>
+
+    <div class="action-buttons">
+      <ion-button expand="block" class="btn-primary">Guardar</ion-button>
+      <ion-button expand="block" fill="outline" class="btn-secondary"
+        >Cancelar</ion-button
+      >
+    </div>
+
+    <div class="scan-banner">
+      <p>
+        Puedes ingresar el gasto manualmente o escanear un ticket para que la IA
+        lo haga por ti.
+      </p>
+      <ion-button fill="clear" class="btn-scan">
         <ion-icon slot="start" name="qr-code-outline"></ion-icon>
         Escanear ticket
       </ion-button>

@@ -12,6 +12,12 @@ ion-toolbar.top-toolbar {
 	padding: 16px 18px 32px;
 }
 
+ion-title {
+  font-weight: 700;
+  color: #1f5de2;
+  font-size: 28px;
+}
+
 .scan-preview {
 	position: relative;
 	background: linear-gradient(140deg, #0f2731 0%, #1a3e4b 50%, #3b6c7c 100%);

@@ -14,6 +14,10 @@ import {
   IonFabButton,
 } from '@ionic/angular/standalone';
 
+import { addIcons } from 'ionicons';
+import { pencilOutline, trashOutline, ellipsisVertical, search, personCircle, add, medkitOutline, carOutline, wifiOutline, cafeOutline } from 'ionicons/icons';
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -31,10 +35,26 @@ import {
     IonLabel,
     IonFab,
     IonFabButton,
+    RouterLink
   ]
 })
 export class Tab2Page {
 
-  constructor() {}
+  constructor() {
+    addIcons({
+      pencilOutline,
+      trashOutline,
+      ellipsisVertical,
+      search,
+      personCircle,
+      add,
+      medkitOutline,
+      carOutline,
+      wifiOutline,
+      cafeOutline
+
+    });
+  }
+
 
 }

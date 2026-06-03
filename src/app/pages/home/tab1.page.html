@@ -2,13 +2,13 @@
   <ion-toolbar class="top-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="person-circle" size="large"></ion-icon>
+        <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title size="large">Gasto Fácil</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="notifications-outline" size="large"></ion-icon>
+        <ion-icon name="notifications-outline" size="large" color="gray"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -123,8 +123,8 @@
     </section>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-    <ion-fab-button (click)="irNuevoGasto()">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/nuevo-gasto">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

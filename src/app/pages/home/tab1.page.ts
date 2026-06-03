@@ -21,7 +21,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {add,arrowUpOutline,cafeOutline,calendarOutline,carOutline,cartOutline,chevronForward,homeOutline,listOutline,notificationsOutline,personCircle,qrCodeOutline,receiptOutline,restaurantOutline,statsChartOutline,trendingUp,} from 'ionicons/icons';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -39,7 +39,8 @@ import { Router } from '@angular/router';
     IonLabel,
     IonList,
     IonTitle,
-    IonToolbar,],
+    IonToolbar,
+    RouterLink],
 })
 export class Tab1Page {
   private readonly router = inject(Router);
@@ -49,7 +50,4 @@ export class Tab1Page {
       add,arrowUpOutline,cafeOutline,calendarOutline,carOutline,cartOutline,chevronForward,homeOutline,listOutline,notificationsOutline,personCircle,qrCodeOutline,receiptOutline,restaurantOutline,statsChartOutline,trendingUp,});
   }
 
-  irNuevoGasto() {
-    this.router.navigateByUrl('/nuevo-gasto');
-  }
 }

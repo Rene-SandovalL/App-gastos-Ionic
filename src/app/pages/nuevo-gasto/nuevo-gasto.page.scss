@@ -1,120 +1,188 @@
-ion-toolbar.top-toolbar {
-	--background: #f7f9fc;
-	--border-color: transparent;
-	padding: 6px 8px 4px;
+/* --- CONFIGURACIÓN GENERAL --- */
+.top-toolbar {
+  --background: #ffffff;
 }
 
 .nuevo-gasto-content {
-	--background: #f5f7fb;
+  --background: #ffffff; /* Todo el fondo es blanco */
 }
 
-.page {
-	padding: 16px 18px 32px;
+.page-container {
+  padding: 16px 20px 32px;
 }
 
-.photo-card {
-	background: #ffffff;
-	padding: 12px;
-	border-radius: 26px;
-	box-shadow: 0 16px 24px rgba(19, 29, 42, 0.08);
-	margin-bottom: 16px;
-}
-
+/* --- IMAGEN SUPERIOR --- */
 .photo-preview {
-	height: 150px;
-	border-radius: 20px;
-	background: linear-gradient(135deg, #8f9aa7 0%, #c4ccd5 100%);
+  height: 110px;
+  border-radius: 24px;
+  /* Quitamos el gradiente gris y ponemos la ruta a tu imagen local */
+  background-image: url('/assets/images/nuevo-gasto-header.png');
+  background-size: cover; /* Para que la imagen llene el espacio sin deformarse */
+  background-position: center; /* Para que muestre el centro de la foto */
+  margin-bottom: 24px;
 }
 
-.form-card {
-	background: #ffffff;
-	border-radius: 26px;
-	padding: 8px 12px 4px;
-	box-shadow: 0 16px 24px rgba(19, 29, 42, 0.08);
-	margin-bottom: 18px;
+/* --- ETIQUETAS EXTERNAS (Labels) --- */
+.input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563; /* Gris oscuro */
+  margin: 0 0 6px 8px;
 }
 
-.form-item {
-	--background: #f0f3f7;
-	--border-radius: 18px;
-	margin: 10px 6px;
+/* --- BURBUJAS DE INPUTS --- */
+.custom-bubble {
+  background: #f3f4f6; /* Gris muy claro para el fondo */
+  border-radius: 20px; /* Súper redondeado */
+  padding: 2px 16px;
+  margin-bottom: 18px;
 }
 
-.form-item ion-label {
-	color: #5e6a77;
-	font-weight: 600;
+.custom-bubble ion-input,
+.custom-bubble ion-select,
+.custom-bubble ion-textarea {
+  --padding-start: 0;
+  --padding-end: 0;
+  --placeholder-color: #9ca3af;
+  --color: #374151;
+  font-weight: 500;
+  font-size: 15px;
 }
 
+/* Input especial para Monto */
+.monto-bubble {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.currency-sign {
+  color: #0b5bd3; /* Signo de pesos azul */
+  font-size: 22px;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.monto-bubble ion-input {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Fila doble */
 .form-row {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-	margin: 0 6px 10px;
+  display: flex;
+  gap: 12px;
 }
 
-.form-item.half {
-	margin: 0;
+.col-half {
+  flex: 1;
+  width: 50%;
 }
 
-.method-section {
-	margin: 6px 8px 12px;
+/* --- MÉTODO DE PAGO (Píldoras) --- */
+.payment-methods {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.section-label {
-	margin: 0 0 8px;
-	font-weight: 600;
-	color: #5e6a77;
+.method-pill {
+  flex: 1;
+  text-align: center;
+  padding: 12px 4px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-ion-segment {
-	--background: #f0f3f7;
-	border-radius: 18px;
-	padding: 6px;
+/* Píldora activa (Efectivo) */
+.method-pill.active {
+  background: #86efac; /* Verde claro */
+  color: #065f46; /* Verde oscuro */
 }
 
-ion-segment-button {
-	--indicator-color: #6de7a2;
-	--color-checked: #0f3a24;
-	--background-checked: #6de7a2;
-	border-radius: 14px;
-	font-weight: 600;
+/* --- BOTONES DE ACCIÓN --- */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
-.form-actions {
-	display: grid;
-	gap: 12px;
-	margin-bottom: 16px;
+.btn-primary {
+  --background: #0b5bd3; /* Azul fuerte */
+  --border-radius: 24px;
+  --box-shadow: none;
+  height: 48px;
+  font-weight: 600;
+  margin: 0;
 }
 
-.primary-action {
-	--background: #0b5bd3;
-	--border-radius: 20px;
-	--box-shadow: 0 14px 22px rgba(11, 91, 211, 0.28);
-	font-weight: 600;
+.btn-secondary {
+  --border-radius: 24px;
+  --color: #0b5bd3;
+  --border-color: #0b5bd3;
+  height: 48px;
+  font-weight: 600;
+  margin: 0;
 }
 
-.secondary-action {
-	--border-radius: 20px;
-	--color: #0b5bd3;
-	--border-color: #0b5bd3;
-	font-weight: 600;
+/* --- BANNER ESCÁNER --- */
+.scan-banner {
+  background: #dcfce7; /* Verde súper claro */
+  border-radius: 24px;
+  padding: 18px;
+  text-align: center;
 }
 
-.scan-card {
-	background: #c9f6da;
-	border-radius: 22px;
-	padding: 16px;
-	text-align: center;
-	color: #0f3a24;
-	box-shadow: 0 12px 20px rgba(70, 195, 128, 0.22);
+.scan-banner p {
+  color: #065f46;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0 0 12px;
 }
 
-.scan-card p {
-	margin: 0 0 10px;
-	font-weight: 600;
+.btn-scan {
+  --color: #0b5bd3; /* Texto e icono azul */
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0;
+  height: auto;
 }
 
-.scan-button {
-	font-weight: 700;
-	color: #0f3a24;
+ion-title {
+  font-weight: 800;
+  color: #1f5de2;
+  font-size: 28px;
+}
+
+/* Contenedor de la fecha y el ícono */
+.date-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Empuja el botón a la izquierda y el ícono a la derecha */
+  padding: 10px 16px; /* Ajustamos para que mida lo mismo que los otros inputs */
+}
+
+/* Modificamos las entrañas del botón de Ionic */
+ion-datetime-button::part(native) {
+  background: transparent;
+  box-shadow: none; /* Quitamos la sombrita por defecto */
+  color: #374151; /* Mismo gris oscuro de tus otros inputs */
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit; /* Fuerza a usar la fuente de tu app */
+  padding: 0;
+}
+
+/* Estilo para el ícono nuevo */
+.date-icon {
+  color: #9ca3af; /* Mismo gris claro de los placeholders */
+  font-size: 18px;
 }

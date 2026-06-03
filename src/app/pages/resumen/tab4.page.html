@@ -2,13 +2,13 @@
   <ion-toolbar class="top-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="person-circle" size="large"></ion-icon>
+        <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title size="large">Gasto Fácil</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="notifications-outline" size="large"></ion-icon>
+        <ion-icon name="notifications-outline" size="large" color="gray"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -29,9 +29,14 @@
     </div>
 
     <div class="chart-card">
-      <div class="chart-placeholder"></div>
-      <p class="chart-label">Gastos 100%</p>
+  <div class="chart-container">
+    <div class="chart-donut"></div>
+    <div class="chart-label">
+      <span class="title">Gastos</span>
+      <span class="value">100%</span>
     </div>
+  </div>
+</div>
 
     <div class="highlight-card">
       <div class="highlight-icon">

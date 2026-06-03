@@ -19,6 +19,12 @@ ion-toolbar.top-toolbar {
 	margin: 8px 0 16px;
 }
 
+ion-title {
+  font-weight: 700;
+  color: #1f5de2;
+  font-size: 28px;
+}
+
 .search-input {
 	--background: #eef2f7;
 	--border-radius: 22px;
@@ -70,6 +76,7 @@ ion-toolbar.top-toolbar {
 	background: #ffffff;
 	border-radius: 22px;
 	box-shadow: 0 14px 26px rgba(24, 35, 52, 0.08);
+	position: relative;
 }
 
 .expense-icon {
@@ -153,6 +160,54 @@ ion-toolbar.top-toolbar {
 	color: #1b2430;
 }
 
+.expense-right {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 6px;
+}
+
+.expense-actions {
+	display: flex;
+	gap: 8px;
+	opacity: 0;
+	transform: translateX(6px);
+	pointer-events: none;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+	margin-top: 2px;
+}
+
+.expense-card:hover .expense-actions,
+.expense-card:active .expense-actions,
+.expense-card:focus-within .expense-actions {
+	opacity: 1;
+	transform: translateX(0);
+	pointer-events: auto;
+}
+
+.action-button {
+	--background: #eef1f4;
+	--color: #56616e;
+	--padding-start: 0;
+	--padding-end: 0;
+	--border-radius: 50%;
+	width: 26px;
+	height: 26px;
+	min-width: 26px;
+	min-height: 26px;
+	border-radius: 50%;
+}
+
+.action-button ion-icon {
+	font-size: 14px;
+	color: inherit;
+}
+
+.action-button.delete {
+	--background: #fdeeee;
+	--color: #d3423a;
+}
+
 .empty-state {
 	text-align: center;
 	margin-top: 36px;
@@ -181,3 +236,9 @@ ion-fab-button {
 	--background: #0b5bd3;
 	--box-shadow: 0 12px 20px rgba(11, 91, 211, 0.32);
 }
+
+ion-fab-button ion-icon {
+  color: #fff;
+  font-size: 30px;
+}
+

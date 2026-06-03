@@ -2,16 +2,16 @@
   <ion-toolbar class="top-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="person-circle" size="large"></ion-icon>
+        <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title size="large">Gasto Fácil</ion-title>
+    <ion-title>Gasto Fácil</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="icon-button">
-        <ion-icon name="search" size="large"></ion-icon>
+      <ion-button fill="clear" class="icon-button ">
+        <ion-icon name="search" color="gray"></ion-icon>
       </ion-button>
       <ion-button fill="clear" class="icon-button">
-        <ion-icon name="ellipsis-vertical" size="large"></ion-icon>
+        <ion-icon name="ellipsis-vertical"  color="gray"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -49,7 +49,17 @@
             <span class="date">05/10</span>
           </div>
         </div>
-        <div class="expense-amount">$600.00</div>
+        <div class="expense-right">
+          <div class="expense-amount">$600.00</div>
+          <div class="expense-actions">
+            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
       </div>
 
       <div class="expense-card">
@@ -63,7 +73,17 @@
             <span class="date">04/10</span>
           </div>
         </div>
-        <div class="expense-amount">$230.00</div>
+        <div class="expense-right">
+          <div class="expense-amount">$230.00</div>
+          <div class="expense-actions">
+            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
       </div>
 
       <div class="expense-card">
@@ -77,7 +97,17 @@
             <span class="date">03/10</span>
           </div>
         </div>
-        <div class="expense-amount">$150.00</div>
+        <div class="expense-right">
+          <div class="expense-amount">$150.00</div>
+          <div class="expense-actions">
+            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
       </div>
 
       <div class="expense-card">
@@ -91,7 +121,17 @@
             <span class="date">02/10</span>
           </div>
         </div>
-        <div class="expense-amount">$120.00</div>
+        <div class="expense-right">
+          <div class="expense-amount">$120.00</div>
+          <div class="expense-actions">
+            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -105,7 +145,7 @@
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
+    <ion-fab-button routerLink="/nuevo-gasto">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
