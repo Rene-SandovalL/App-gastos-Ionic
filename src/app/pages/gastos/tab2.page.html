@@ -21,108 +21,48 @@
   <div class="page">
     <h1 class="page-title">Mis gastos</h1>
 
-    <ion-searchbar placeholder="¿En qué gastaste hoy?" class="search-input"></ion-searchbar>
+    <ion-searchbar
+      placeholder="¿En qué gastaste hoy?"
+      class="search-input"
+      [value]="searchValue"
+      (ionInput)="onSearchChange($event)"
+    ></ion-searchbar>
 
     <div class="filter-row">
-      <ion-chip class="filter-chip">
+      <ion-chip class="filter-chip" (click)="openDateModal()">
         <ion-icon name="calendar-outline"></ion-icon>
         <ion-label>Fecha</ion-label>
       </ion-chip>
       <div class="filter-divider"></div>
-      <ion-chip class="filter-chip active">
-        <ion-label>Todos</ion-label>
-      </ion-chip>
-      <ion-chip class="filter-chip">
-        <ion-label>Comida</ion-label>
+      <ion-chip
+        class="filter-chip"
+        *ngFor="let filter of filters"
+        [class.active]="activeFilter === filter"
+        (click)="setFilter(filter)"
+      >
+        <ion-label>{{ filter }}</ion-label>
       </ion-chip>
     </div>
 
     <div class="expense-list">
-      <div class="expense-card">
-        <div class="expense-icon servicios">
-          <ion-icon name="wifi-outline"></ion-icon>
+      <div
+        class="expense-card"
+        *ngFor="let gasto of gastos; trackBy: trackByGastoId"
+      >
+        <div class="expense-icon" [ngClass]="getCategoryClass(gasto.categoria)">
+          <ion-icon [name]="getCategoryIcon(gasto.categoria)"></ion-icon>
         </div>
         <div class="expense-info">
-          <h3>Pago de internet</h3>
+          <h3>{{ gasto.concepto }}</h3>
           <div class="expense-meta">
-            <span class="tag servicios">Servicios</span>
-            <span class="date">05/10</span>
+            <span class="tag" [ngClass]="getCategoryClass(gasto.categoria)">
+              {{ getCategoryLabel(gasto.categoria) }}
+            </span>
+            <span class="date">{{ gasto.fecha_gasto | date:'dd/MM' }}</span>
           </div>
         </div>
         <div class="expense-right">
-          <div class="expense-amount">$600.00</div>
-          <div class="expense-actions">
-            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
-              <ion-icon name="pencil-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
-
-      <div class="expense-card">
-        <div class="expense-icon salud">
-          <ion-icon name="medkit-outline"></ion-icon>
-        </div>
-        <div class="expense-info">
-          <h3>Compra en farmacia</h3>
-          <div class="expense-meta">
-            <span class="tag salud">Salud</span>
-            <span class="date">04/10</span>
-          </div>
-        </div>
-        <div class="expense-right">
-          <div class="expense-amount">$230.00</div>
-          <div class="expense-actions">
-            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
-              <ion-icon name="pencil-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
-
-      <div class="expense-card">
-        <div class="expense-icon transporte">
-          <ion-icon name="car-outline"></ion-icon>
-        </div>
-        <div class="expense-info">
-          <h3>Transporte en taxi</h3>
-          <div class="expense-meta">
-            <span class="tag transporte">Transporte</span>
-            <span class="date">03/10</span>
-          </div>
-        </div>
-        <div class="expense-right">
-          <div class="expense-amount">$150.00</div>
-          <div class="expense-actions">
-            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
-              <ion-icon name="pencil-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
-
-      <div class="expense-card">
-        <div class="expense-icon comida">
-          <ion-icon name="cafe-outline"></ion-icon>
-        </div>
-        <div class="expense-info">
-          <h3>Comida en cafetería</h3>
-          <div class="expense-meta">
-            <span class="tag comida">Comida</span>
-            <span class="date">02/10</span>
-          </div>
-        </div>
-        <div class="expense-right">
-          <div class="expense-amount">$120.00</div>
+          <div class="expense-amount">{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</div>
           <div class="expense-actions">
             <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
               <ion-icon name="pencil-outline"></ion-icon>
@@ -135,14 +75,38 @@
       </div>
     </div>
 
-    <div class="empty-state">
+    <div class="loading-state" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando gastos...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && gastos.length === 0">
       <div class="empty-illustration">
         <ion-icon name="receipt-outline"></ion-icon>
       </div>
       <p>¿No encuentras lo que buscas?</p>
       <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
     </div>
+
+    <div class="empty-state" *ngIf="!isLoading && reachedEnd && gastos.length > 0">
+      <div class="empty-illustration">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </div>
+      <p>Terminaste de ver todos los gastos.</p>
+      <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
+    </div>
   </div>
+
+  <ion-infinite-scroll
+    threshold="120px"
+    (ionInfinite)="loadMore($event)"
+    [disabled]="reachedEnd || isLoadingMore"
+  >
+    <ion-infinite-scroll-content
+      loadingSpinner="dots"
+      loadingText="Cargando más gastos..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button routerLink="/nuevo-gasto">
@@ -150,3 +114,38 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+<ion-modal [isOpen]="isDateModalOpen" (didDismiss)="closeDateModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Filtrar por fecha</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeDateModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="date-modal-content">
+      <div class="date-picker">
+        <p class="date-label">Desde</p>
+        <ion-datetime
+          presentation="date"
+          [value]="fechaInicio"
+          (ionChange)="onFechaInicioChange($event.detail.value)"
+        ></ion-datetime>
+      </div>
+      <div class="date-picker">
+        <p class="date-label">Hasta</p>
+        <ion-datetime
+          presentation="date"
+          [value]="fechaFin"
+          (ionChange)="onFechaFinChange($event.detail.value)"
+        ></ion-datetime>
+      </div>
+      <div class="date-actions">
+        <ion-button fill="clear" (click)="clearDateRange()">Limpiar</ion-button>
+        <ion-button (click)="applyDateRange()">Aplicar</ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
