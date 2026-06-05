@@ -24,7 +24,7 @@
 
 /* --- ETIQUETAS EXTERNAS (Labels) --- */
 .input-label {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   color: #4b5563; /* Gris oscuro */
   margin: 0 0 6px 8px;
@@ -171,15 +171,21 @@ ion-title {
   padding: 10px 16px; /* Ajustamos para que mida lo mismo que los otros inputs */
 }
 
-/* Modificamos las entrañas del botón de Ionic */
-ion-datetime-button::part(native) {
-  background: transparent;
-  box-shadow: none; /* Quitamos la sombrita por defecto */
-  color: #374151; /* Mismo gris oscuro de tus otros inputs */
+.date-trigger {
+  --background: transparent;
+  --box-shadow: none;
+  --color: #374151;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin: 0;
+  text-transform: none;
   font-size: 15px;
   font-weight: 500;
-  font-family: inherit; /* Fuerza a usar la fuente de tu app */
-  padding: 0;
+  font-family: inherit;
+}
+
+.date-trigger-text {
+  white-space: nowrap;
 }
 
 /* Estilo para el ícono nuevo */

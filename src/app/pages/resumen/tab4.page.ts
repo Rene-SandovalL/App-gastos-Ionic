@@ -10,6 +10,8 @@ import {
   IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { personCircle, trendingUp, notificationsOutline, restaurantOutline, wifiOutline, busOutline, cartOutline, carOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab4',
@@ -30,7 +32,9 @@ import {
 })
 export class Tab4Page implements OnInit {
 
-  constructor() { }
+  constructor() {
+    addIcons({ personCircle, trendingUp, notificationsOutline, restaurantOutline, wifiOutline, busOutline, cartOutline, carOutline });
+  }
 
   ngOnInit() {
   }

@@ -8,7 +8,9 @@
     <ion-title>Gasto Fácil</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" class="icon-button">
-        <ion-label color="gray" style="font-size: 10px;">Escanear ticket</ion-label>
+        <ion-label color="gray" style="font-size: 10px"
+          >Escanear ticket</ion-label
+        >
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -16,24 +18,54 @@
 
 <ion-content [fullscreen]="true" class="scan-content">
   <div class="page">
-    <div class="scan-preview">
+    <div
+      class="scan-preview"
+      id="cameraSpace"
+      [class.camera-active]="isCameraActive"
+    >
+      <video
+        #videoElement
+        autoplay
+        playsinline
+        [class.show-video]="isCameraActive && !finalPhoto"
+      ></video>
+
+      @if (finalPhoto) {
+      <img [src]="finalPhoto" class="foto-result" />
+      } @else {
       <div class="scan-frame">
         <div class="scan-guide"></div>
       </div>
-      <div class="scan-hint">Alinea el ticket con el recuadro</div>
+      <div class="scan-hint">
+        {{ isCameraActive ? 'Enfoca el ticket...' : 'Alinea el ticket con el
+        recuadro' }}
+      </div>
+      }
     </div>
 
     <div class="scan-actions">
-      <ion-button expand="block" class="primary-action">
-        <ion-icon slot="start" name="camera-outline"></ion-icon>
-        Tomar foto
+      <ion-button
+        expand="block"
+        class="primary-action"
+        (click)="isCameraActive ? takePhoto() : startCamera()"
+      >
+        <ion-icon
+          slot="start"
+          [name]="isCameraActive ? 'aperture-outline' : 'camera-outline'"
+        ></ion-icon>
+        {{ isCameraActive ? 'Capturar' : 'Tomar foto' }}
       </ion-button>
-      <ion-button expand="block" fill="outline" class="secondary-action">
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="secondary-action"
+        (click)="openGallery()"
+      >
         <ion-icon slot="start" name="image-outline"></ion-icon>
         Galería
       </ion-button>
     </div>
-
     <div class="recent-capture">
       <div class="capture-thumb"></div>
       <div class="capture-info">
@@ -50,6 +82,8 @@
       Analizar con IA
     </ion-button>
 
-    <p class="scan-note">Nuestra IA detectará automáticamente montos, fechas y categorías.</p>
+    <p class="scan-note">
+      Nuestra IA detectará automáticamente montos, fechas y categorías.
+    </p>
   </div>
 </ion-content>

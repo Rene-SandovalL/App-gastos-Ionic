@@ -17,19 +17,6 @@ type GastoRow = {
   providedIn: 'root',
 })
 export class GastosService {
-  private readonly selectColumns = [
-    'id',
-    'created_at',
-    'Concepto',
-    'Monto',
-    'Fecha_gasto',
-    'Categoria',
-    'Metodo_pago',
-    'Notas',
-  ];
-  private readonly fechaColumn = 'Fecha_gasto';
-  private readonly categoriaColumn = 'Categoria';
-
   constructor(private supabaseService: SupabaseService) {}
 
   async getGastos(params: {
@@ -47,12 +34,12 @@ export class GastosService {
     let query = this.supabaseService
       .getClient()
       .from('gastos')
-      .select(this.selectColumns.join(', '))
-      .order(this.fechaColumn, { ascending: false })
+      .select('id, created_at, Concepto, Monto, Fecha_gasto, Categoria, Metodo_pago, Notas')
+      .order('Fecha_gasto', { ascending: false })
       .range(from, to);
 
     if (categoria && categoria !== 'Todos') {
-      query = query.eq(this.categoriaColumn, categoria);
+      query = query.eq('Categoria', categoria);
     }
 
     if (searchTerm) {
@@ -60,11 +47,11 @@ export class GastosService {
     }
 
     if (fechaInicio) {
-      query = query.gte(this.fechaColumn, fechaInicio);
+      query = query.gte('Fecha_gasto', fechaInicio);
     }
 
     if (fechaFin) {
-      query = query.lte(this.fechaColumn, fechaFin);
+      query = query.lte('Fecha_gasto', fechaFin);
     }
 
     const { data, error } = await query;
@@ -85,5 +72,25 @@ export class GastosService {
       data: normalized,
       error: error ? error.message : null,
     };
+  }
+
+  async addGasto(payload: {
+    concepto: string;
+    monto: number;
+    fecha_gasto: string;
+    categoria: string;
+    metodo_pago: string;
+    notas: string;
+  }): Promise<{ error: string | null }> {
+    const { error } = await this.supabaseService.getClient().from('gastos').insert({
+      Concepto: payload.concepto,
+      Monto: payload.monto,
+      Fecha_gasto: payload.fecha_gasto,
+      Categoria: payload.categoria,
+      Metodo_pago: payload.metodo_pago,
+      Notas: payload.notas,
+    });
+
+    return { error: error ? error.message : null };
   }
 }

@@ -20,53 +20,83 @@
 </ion-header>
 
 <ion-content class="nuevo-gasto-content">
-  <div class="page-container">
+  <form class="page-container" [formGroup]="form" (ngSubmit)="guardar()">
     <div class="photo-preview"></div>
 
     <p class="input-label">Concepto</p>
     <div class="custom-bubble">
-      <ion-input placeholder="¿En qué gastaste hoy?"></ion-input>
+      <ion-input
+        placeholder="¿En qué gastaste hoy?"
+        formControlName="concepto"
+      ></ion-input>
     </div>
+    @if (form.controls.concepto.touched && form.controls.concepto.hasError('required')) {
+      <ion-text color="danger"><p>El concepto es requerido.</p></ion-text>
+    }
+    @if (form.controls.concepto.touched && form.controls.concepto.hasError('minlength')) {
+      <ion-text color="danger"><p>El concepto debe tener al menos 3 caracteres.</p></ion-text>
+    }
 
     <p class="input-label">Monto</p>
     <div class="custom-bubble monto-bubble">
       <span class="currency-sign">$</span>
-      <ion-input placeholder="0.00"></ion-input>
+      <ion-input
+        placeholder="0.00"
+        type="number"
+        inputmode="decimal"
+        formControlName="monto"
+      ></ion-input>
     </div>
+    @if (form.controls.monto.touched && form.controls.monto.hasError('required')) {
+      <ion-text color="danger"><p>El monto es requerido.</p></ion-text>
+    }
+    @if (form.controls.monto.touched && form.controls.monto.hasError('min')) {
+      <ion-text color="danger"><p>El monto debe ser mayor a 0.</p></ion-text>
+    }
 
     <div class="form-row">
       <div class="col-half">
         <p class="input-label">Fecha</p>
 
         <div class="custom-bubble date-bubble">
-          <ion-datetime-button
-            datetime="calendario-gasto"
-          ></ion-datetime-button>
+          <ion-button id="fecha-gasto-trigger" fill="clear" class="date-trigger">
+            <span class="date-trigger-text">
+              {{ form.controls.fecha_gasto.value ? (form.controls.fecha_gasto.value | date:'dd/MM/yyyy') : 'Seleccionar fecha' }}
+            </span>
+          </ion-button>
 
           <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
 
-          <ion-modal [keepContentsMounted]="true">
+          <ion-modal trigger="fecha-gasto-trigger" [keepContentsMounted]="true">
             <ng-template>
               <ion-datetime
                 id="calendario-gasto"
                 presentation="date"
+                [value]="form.controls.fecha_gasto.value"
+                (ionChange)="onFechaGastoChange($event.detail.value)"
               ></ion-datetime>
             </ng-template>
           </ion-modal>
         </div>
+        @if (form.controls.fecha_gasto.touched && form.controls.fecha_gasto.hasError('required')) {
+          <ion-text color="danger"><p>La fecha es requerida.</p></ion-text>
+        }
       </div>
 
       <div class="col-half">
         <p class="input-label">Categoría</p>
         <div class="custom-bubble">
-          <ion-select placeholder="Seleccionar" interface="popover">
-            <ion-select-option value="comida">Comida</ion-select-option>
-            <ion-select-option value="servicios">Servicios</ion-select-option>
-            <ion-select-option value="transporte">Transporte</ion-select-option>
-            <ion-select-option value="salud">Salud</ion-select-option>
-            <ion-select-option value="otros">Otros</ion-select-option>
+          <ion-select placeholder="Seleccionar" interface="popover" formControlName="categoria" style="color: rgb(82, 82, 82)">
+            <ion-select-option value="Comida">Comida</ion-select-option>
+            <ion-select-option value="Servicio">Servicio</ion-select-option>
+            <ion-select-option value="Transporte">Transporte</ion-select-option>
+            <ion-select-option value="Salud">Salud</ion-select-option>
+            <ion-select-option value="Otros">Otros</ion-select-option>
           </ion-select>
         </div>
+        @if (form.controls.categoria.touched && form.controls.categoria.hasError('required')) {
+          <ion-text color="danger"><p>La categoría es requerida.</p></ion-text>
+        }
       </div>
     </div>
 
@@ -74,42 +104,67 @@
     <div class="payment-methods">
       <div
         class="method-pill"
-        [class.active]="metodoSeleccionado === 'efectivo'"
-        (click)="seleccionarMetodo('efectivo')"
+        [class.active]="isMetodoActivo('Efectivo')"
+        (click)="seleccionarMetodo('Efectivo')"
       >
         Efectivo
       </div>
 
       <div
         class="method-pill"
-        [class.active]="metodoSeleccionado === 'tarjeta'"
-        (click)="seleccionarMetodo('tarjeta')"
+        [class.active]="isMetodoActivo('Tarjeta')"
+        (click)="seleccionarMetodo('Tarjeta')"
       >
         Tarjeta
       </div>
 
       <div
         class="method-pill"
-        [class.active]="metodoSeleccionado === 'transferencia'"
-        (click)="seleccionarMetodo('transferencia')"
+        [class.active]="isMetodoActivo('Transferencia')"
+        (click)="seleccionarMetodo('Transferencia')"
       >
         Transferencia
       </div>
     </div>
+    @if (form.controls.metodo_pago.touched && form.controls.metodo_pago.hasError('required')) {
+      <ion-text color="danger"><p>El método de pago es requerido.</p></ion-text>
+    }
 
     <p class="input-label">Notas</p>
     <div class="custom-bubble">
       <ion-textarea
         placeholder="Agrega más detalles aquí..."
         rows="3"
+        formControlName="notas"
       ></ion-textarea>
     </div>
+    @if (form.controls.notas.touched && form.controls.notas.hasError('required')) {
+      <ion-text color="danger"><p>Las notas son requeridas.</p></ion-text>
+    }
+    @if (form.controls.notas.touched && form.controls.notas.hasError('minlength')) {
+      <ion-text color="danger"><p>Las notas deben tener al menos 3 caracteres.</p></ion-text>
+    }
+
+    @if (errorMessage) {
+      <ion-text color="danger"><p>{{ errorMessage }}</p></ion-text>
+    }
 
     <div class="action-buttons">
-      <ion-button expand="block" class="btn-primary" >Guardar</ion-button>
-      <ion-button expand="block" fill="outline" class="btn-secondary"
-        >Cancelar</ion-button
+      <ion-button
+        type="submit"
+        expand="block"
+        class="btn-primary"
+        [disabled]="form.invalid || guardando"
       >
+        @if (guardando) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Guardar
+        }
+      </ion-button>
+      <ion-button expand="block" fill="outline" class="btn-secondary" type="button">
+        Cancelar
+      </ion-button>
     </div>
 
     <div class="scan-banner">
@@ -122,5 +177,5 @@
         Escanear ticket
       </ion-button>
     </div>
-  </div>
+  </form>
 </ion-content>

@@ -18,41 +18,171 @@ ion-title {
   font-size: 28px;
 }
 
+
+/* --- Contenedor Principal (Cambio de fondo a la imagen del ticket) --- */
+/* --- Contenedor Principal (Más ancho y más alto) --- */
 .scan-preview {
-	position: relative;
-	background: linear-gradient(140deg, #0f2731 0%, #1a3e4b 50%, #3b6c7c 100%);
-	border-radius: 26px;
-	height: 320px;
-	box-shadow: 0 18px 28px rgba(11, 23, 36, 0.25);
-	overflow: hidden;
+  position: relative;
+  background-image: url('/assets/images/scan-preview.png'); /* ⚠️ Pon aquí tu URL real */
+  background-size: cover;
+  background-position: center;
+  border-radius: 26px;
+
+  /* 👇 CAMBIOS DE TAMAÑO AQUÍ 👇 */
+  height: 460px;       /* Lo subimos de 320px a 460px para que quede más alto */
+  width: 92%;          /* Abarca el 90% de la pantalla del celular */
+  max-width: 400px;    /* Tope de seguridad por si lo abren en tablet o compu */
+  margin: 24px auto;   /* Centrado automático con un poco más de aire arriba y abajo */
+  /* 👆 ---------------------- 👆 */
+
+  box-shadow: 0 18px 28px rgba(11, 23, 36, 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* --- Recuadro Exterior (Resplandor Teal/Cian) --- */
 .scan-frame {
-	position: absolute;
-	inset: 26px;
-	border-radius: 22px;
-	border: 2px solid rgba(0, 180, 255, 0.4);
-	box-shadow: inset 0 0 30px rgba(0, 180, 255, 0.2);
+  position: absolute;
+  /* Ajuste de insets para alinearse con la pantalla interior del teléfono */
+  inset: 28px 18px 60px 18px; /* Superior, Derecho, Inferior, Izquierdo */
+  border-radius: 20px;
+  border: 2px solid rgba(0, 255, 255, 0.6); /* Brillo cian más intenso */
+  /* Sombra interior intensa cian */
+  box-shadow:
+    inset 0 0 15px rgba(0, 255, 255, 0.4),
+    0 0 10px rgba(0, 255, 255, 0.2);
+  z-index: 1;
 }
 
+/* --- Recuadro Interior (Línea Azul Delgada) --- */
 .scan-guide {
-	position: absolute;
-	inset: 16px;
-	border-radius: 18px;
-	border: 2px solid rgba(0, 140, 255, 0.7);
+  position: absolute;
+  /* Nested sutilmente dentro del scan-frame */
+  inset: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 140, 255, 0.8); /* Pure blue línea delgada */
+  z-index: 2;
 }
 
+/* --- 🌟 Animación de Escaneo: La línea horizontal --- */
+.scan-guide::after {
+  content: '';
+  position: absolute;
+  left: -2px; /* Alinear con el borde del guide */
+  right: -2px;
+  height: 3px;
+  border-radius: 2px;
+  /* Degradado para la línea: teal/azul con glow */
+  background: linear-gradient(to bottom, rgba(0, 255, 255, 1) 0%, rgba(0, 140, 255, 1) 50%, rgba(0, 255, 255, 1) 100%);
+  box-shadow:
+    0 0 8px rgba(0, 180, 255, 0.8), /* Glow principal */
+    0 0 15px rgba(0, 180, 255, 0.4);
+
+  /* Configuración de la animación */
+  animation: scanDownUp 2.5s ease-in-out infinite;
+  z-index: 4;
+}
+
+/* --- 🌟 Las Esquinas Azules Gruesas (Usando pseudo-elementos del frame) --- */
+/* Esquinas Superiores */
+.scan-frame::before {
+  content: '';
+  position: absolute;
+  inset: -6px; /* Salir un poco de los recuadros */
+  border-radius: 18px;
+  border: 5px solid #0056e6; /* Thick blue */
+  border-bottom: none;
+  border-right: none;
+  width: 40px; /* Tamaño del bracket */
+  height: 40px;
+  z-index: 5;
+}
+/* Esquinas Inferiores */
+.scan-frame::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; /* Salir un poco abajo */
+  right: -6px; /* Salir un poco a la derecha */
+  border-radius: 18px;
+  border: 5px solid #0056e6; /* Thick blue */
+  border-top: none;
+  border-left: none;
+  width: 40px; /* Tamaño del bracket */
+  height: 40px;
+  z-index: 5;
+}
+/* Replicamos esquinas top-right y bottom-left (opcional si quieres todas) usando el guide */
+/* Top-Right */
+.scan-guide::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    border-radius: 14px;
+    border: 5px solid #0056e6;
+    border-bottom: none;
+    border-left: none;
+    width: 30px;
+    height: 30px;
+    z-index: 5;
+}
+/* Bottom-Left (Este no sale tanto en la imagen objetivo, pero así lo blindamos) */
+/* Lo omito por ahora para igualar a la imagen que pasaste, Apa */
+
+
+/* --- Texto de Ayuda (Estilo final) --- */
 .scan-hint {
-	position: absolute;
-	bottom: 20px;
-	left: 50%;
-	transform: translateX(-50%);
-	padding: 8px 16px;
-	border-radius: 20px;
-	background: rgba(25, 25, 25, 0.6);
-	color: #ffffff;
-	font-weight: 600;
-	font-size: 13px;
+  position: absolute;
+  bottom: 12px; /* Un poco más abajo que antes */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px; /* Un poco más espacioso */
+  border-radius: 24px;
+  background: rgba(30, 30, 30, 0.85); /* Fondo oscuro más opaco */
+  color: #f1f1f1; /* Blanco ligeramente apagado */
+  font-weight: 500; /* Medium weight */
+  font-size: 13px;
+  text-align: center;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* --- Definición de la Animación keyframe --- */
+@keyframes scanDownUp {
+  0% {
+    top: 10%; /* Inicia un poco adentro del guide top */
+    opacity: 0;
+  }
+  10% {
+    opacity: 1; /* Fade in rápido */
+  }
+  50% {
+    top: 90%; /* Llega al guide bottom */
+    opacity: 1;
+  }
+  90% {
+    opacity: 1; /* Se mantiene visible casi al final */
+  }
+  100% {
+    top: 10%; /* Sube de golpe o con ease suave (ease-in-out maneja esto) */
+    opacity: 0; /* Fade out rápido al reiniciar */
+  }
+}
+
+.scan-preview.camera-active {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* Estilo para que la foto que tomes llene el recuadro */
+.foto-result {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 .scan-actions {
@@ -124,4 +254,19 @@ ion-title {
 	color: #7b8795;
 	font-size: 13px;
 	margin: 0 16px;
+}
+
+video {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1; /* Queda detrás de la línea azul del escáner */
+}
+
+video.show-video {
+  display: block; /* Se muestra cuando la cámara está activa */
 }
