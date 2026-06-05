@@ -34,9 +34,12 @@ ion-title {
 	background: linear-gradient(145deg, #0b5bd3 0%, #1b6fe3 100%);
 	color: #ffffff;
 	border-radius: 26px;
-	padding: 20px;
 	box-shadow: 0 18px 28px rgba(11, 91, 211, 0.3);
 	margin-bottom: 18px;
+}
+
+.summary-card ion-card-content {
+	padding: 20px;
 }
 
 .summary-label {
@@ -64,14 +67,17 @@ ion-title {
 }
 
 .chart-card {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 14px 22px rgba(19, 29, 42, 0.08);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 18px;
+	background: #ffffff;
+	border-radius: 24px;
+	box-shadow: 0 14px 22px rgba(19, 29, 42, 0.08);
+	margin-bottom: 18px;
+}
+
+.chart-card ion-card-content {
+	padding: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .chart-container {
@@ -89,12 +95,7 @@ ion-title {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: conic-gradient(
-    #0d52bc 0deg 120deg,      /* Azul */
-    #067035 120deg 220deg,    /* Verde */
-    #9e3333 220deg 290deg,    /* Rojo/Vino */
-    #7a808d 290deg 360deg     /* Gris */
-  );
+	background: var(--donut-gradient, conic-gradient(#e0e0e0 0deg 360deg));
   /* Máscara para hacer el hueco del centro (soporte webkit y estándar) */
   -webkit-mask: radial-gradient(circle at center, transparent 55%, #000 55%);
   mask: radial-gradient(circle at center, transparent 55%, #000 55%);
@@ -124,12 +125,21 @@ ion-title {
 .highlight-card {
 	background: #6de7a2;
 	border-radius: 24px;
+	box-shadow: 0 16px 24px rgba(61, 196, 129, 0.3);
+	margin-bottom: 18px;
+}
+
+.highlight-card ion-card-content {
 	padding: 18px;
 	display: grid;
 	gap: 10px;
 	color: #0f3a24;
-	box-shadow: 0 16px 24px rgba(61, 196, 129, 0.3);
-	margin-bottom: 18px;
+}
+
+.highlight-header {
+	display: flex;
+	gap: 12px;
+	align-items: center;
 }
 
 .highlight-icon {
@@ -143,17 +153,10 @@ ion-title {
 }
 
 .progress-bar {
-	width: 100%;
+	--background: rgba(8, 37, 23, 0.15);
+	--progress-background: #0f3a24;
 	height: 8px;
 	border-radius: 999px;
-	background: rgba(8, 37, 23, 0.15);
-	overflow: hidden;
-}
-
-.progress-fill {
-	width: 60%;
-	height: 100%;
-	background: #0f3a24;
 }
 
 .section-title {
@@ -166,23 +169,38 @@ ion-title {
 
 .category-list {
 	display: grid;
-	gap: 12px;
+	gap: 6px;
+	background: transparent;
+	padding: 0;
+	margin: 0;
 }
 
 .category-item {
-	background: #ffffff;
+	--background: #ffffff;
+	--background-activated: #ffffff;
+	--background-focused: #ffffff;
+	--background-hover: #ffffff;
+	--min-height: 70px;
 	border-radius: 20px;
-	padding: 14px 16px;
-	display: grid;
-	grid-template-columns: auto 1fr auto;
+	padding: 3px 3px;
+	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 10px;
 	box-shadow: 0 12px 20px rgba(19, 29, 42, 0.08);
+	margin-bottom: 0;
+	overflow: visible;
+}
+
+.category-item::part(native) {
+	border-radius: 20px;
+	align-items: center;
+	padding: 10px;
+	background: #ffffff;
 }
 
 .category-icon {
-	width: 44px;
-	height: 44px;
+	width: 50px;
+	height: 50px;
 	border-radius: 16px;
 	display: grid;
 	place-items: center;
@@ -190,41 +208,54 @@ ion-title {
 }
 
 .category-icon.comida {
-	background: #e6f1ff;
-	color: #0b5bd3;
+	background: #ffe8d1;
+	color: #f57c00;
 }
 
 .category-icon.servicios {
-	background: #fdeceb;
-	color: #d45a4f;
+	background: #fde4e4;
+	color: #d32f2f;
 }
 
 .category-icon.transporte {
-	background: #eef0f4;
-	color: #6b7280;
+	background: #e3f2fd;
+	color: #1976d2;
+}
+
+.category-icon.salud {
+	background: #e3f2e7;
+	color: #388e3c;
 }
 
 .category-icon.otros {
-	background: #e9f6f1;
-	color: #1c8f6a;
+	background: #eeeeee;
+	color: #757575;
 }
 
 .category-info h3 {
-	margin: 0 0 2px;
+	margin: 0px 10px 1px;
 	font-size: 15px;
 	font-weight: 700;
 	color: #1c232b;
 }
 
 .category-info p {
-	margin: 0;
-	font-size: 12px;
+	margin: 0px 10px 0;
+	font-size: 14px;
 	color: #7b8795;
 }
 
 .category-amount {
 	font-weight: 700;
 	color: #1c232b;
+	margin-left: auto;
+}
+
+.loading-state,
+.empty-state,
+.error-state {
+	text-align: center;
+	margin: 16px 0;
 }
 
 .motivation-card {

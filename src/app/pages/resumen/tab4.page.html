@@ -19,93 +19,90 @@
     <h1 class="page-title">Resumen</h1>
     <p class="page-subtitle">Análisis de tus finanzas este mes</p>
 
-    <div class="summary-card">
-      <p class="summary-label">Total acumulado</p>
-      <h2 class="summary-amount">$5,230.00</h2>
-      <div class="summary-pill">
-        <ion-icon name="trending-up"></ion-icon>
-        <span>8% más que el mes pasado</span>
-      </div>
-    </div>
+    <ion-card class="summary-card">
+      <ion-card-content>
+        <p class="summary-label">Total acumulado</p>
+        <h2 class="summary-amount">{{ totalMes | currency:'USD':'symbol':'1.2-2' }}</h2>
+        <div class="summary-pill">
+          <ion-icon name="trending-up"></ion-icon>
+          <span>{{ totalCount }} gastos registrados</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <div class="chart-card">
-  <div class="chart-container">
-    <div class="chart-donut"></div>
-    <div class="chart-label">
-      <span class="title">Gastos</span>
-      <span class="value">100%</span>
-    </div>
-  </div>
-</div>
+    <ion-card class="chart-card">
+      <ion-card-content>
+        <div class="chart-container">
+          <div class="chart-donut" [style.--donut-gradient]="donutGradient"></div>
+          <div class="chart-label">
+            <span class="title">Gastos</span>
+            <span class="value">{{ totalMes > 0 ? '100%' : '0%' }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <div class="highlight-card">
-      <div class="highlight-icon">
-        <ion-icon name="restaurant-outline"></ion-icon>
-      </div>
-      <div>
-        <p>Categoría con más gastos</p>
-        <strong>Comida (35%)</strong>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
-      </div>
-    </div>
+    <ion-card class="highlight-card">
+      <ion-card-content>
+        <div class="highlight-header">
+          <div class="highlight-icon">
+            <ion-icon name="trending-up"></ion-icon>
+          </div>
+          <div>
+            <p>Categoría con más gastos</p>
+            <strong>{{ topCategoryLabel }} ({{ topCategoryPercent | number:'1.0-1' }}%)</strong>
+          </div>
+        </div>
+        <ion-progress-bar
+          class="progress-bar"
+          [value]="topCategoryPercent / 100"
+          [style.--progress-background]="topCategoryColor"
+        ></ion-progress-bar>
+      </ion-card-content>
+    </ion-card>
 
     <h2 class="section-title">Desglose por categoría</h2>
 
-    <div class="category-list">
-      <div class="category-item">
-        <div class="category-icon comida">
-          <ion-icon name="restaurant-outline"></ion-icon>
-        </div>
-        <div class="category-info">
-          <h3>Comida</h3>
-          <p>35% del total</p>
-        </div>
-        <div class="category-amount">$1,830.50</div>
-      </div>
+    @if (!isLoading) {
+      <ion-list class="category-list">
+        @for (category of categoryBreakdown; track category.label) {
+          <ion-item class="category-item" lines="none">
+            <div class="category-icon" [ngClass]="category.cssClass">
+              <ion-icon [name]="category.icon"></ion-icon>
+            </div>
+            <ion-label class="category-info">
+              <h3>{{ category.label }}</h3>
+              <p>{{ category.percent | number:'1.0-1' }}% del total</p>
+            </ion-label>
+            <ion-text class="category-amount">
+              {{ category.amount | currency:'USD':'symbol':'1.2-2' }}
+            </ion-text>
+          </ion-item>
+        }
+      </ion-list>
+    }
 
-      <div class="category-item">
-        <div class="category-icon servicios">
-          <ion-icon name="wifi-outline"></ion-icon>
-        </div>
-        <div class="category-info">
-          <h3>Servicios</h3>
-          <p>23% del total</p>
-        </div>
-        <div class="category-amount">$1,200.00</div>
+    @if (isLoading) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando resumen...</p>
       </div>
+    }
 
-      <div class="category-item">
-        <div class="category-icon transporte">
-          <ion-icon name="car-outline"></ion-icon>
-        </div>
-        <div class="category-info">
-          <h3>Transporte</h3>
-          <p>18% del total</p>
-        </div>
-        <div class="category-amount">$950.00</div>
+    @if (!isLoading && totalCount === 0) {
+      <div class="empty-state">
+        <ion-text color="medium">
+          <p>No hay gastos registrados en el mes actual.</p>
+        </ion-text>
       </div>
+    }
 
-      <div class="category-item">
-        <div class="category-icon otros">
-          <ion-icon name="cart-outline"></ion-icon>
-        </div>
-        <div class="category-info">
-          <h3>Otros</h3>
-          <p>24% del total</p>
-        </div>
-        <div class="category-amount">$1,249.50</div>
+    @if (errorMessage) {
+      <div class="error-state">
+        <ion-text color="danger">
+          <p>{{ errorMessage }}</p>
+        </ion-text>
       </div>
-    </div>
-
-    <div class="motivation-card">
-      <div class="motivation-text">
-        <strong>¡Vas por buen camino!</strong>
-        <p>Has ahorrado un 12% comparado con la semana anterior.</p>
-        <p>Mantén el enfoque en tu categoría de Comida.</p>
-      </div>
-      <div class="motivation-illustration"></div>
-    </div>
+    }
   </div>
 </ion-content>
