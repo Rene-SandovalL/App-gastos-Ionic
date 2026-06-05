@@ -256,6 +256,13 @@ ion-title {
 	margin: 0 16px;
 }
 
+.scan-error {
+  text-align: center;
+  color: #d3423a;
+  font-size: 13px;
+  margin: 8px 16px 0;
+}
+
 video {
   display: none; /* Oculto por defecto */
   position: absolute;

@@ -18,6 +18,7 @@ import {
   IonModal,
   IonDatetime,
   IonSpinner,
+  IonToast,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -36,7 +37,7 @@ import {
   calendarOutline,
   receiptOutline,
 } from 'ionicons/icons';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { GastosService } from '../../services/gastos.service';
 import { gastos } from '../../models/gasto.model';
 
@@ -63,6 +64,7 @@ import { gastos } from '../../models/gasto.model';
     IonModal,
     IonDatetime,
     IonSpinner,
+    IonToast,
     RouterLink
   ]
 })
@@ -82,8 +84,15 @@ export class Tab2Page implements OnInit {
   fechaFin: string | null = null;
   searchValue = '';
   private searchDebounceId?: number;
+  activeCardId: number | null = null;
+  isToastOpen = false;
+  toastMessage = '';
+  toastColor: 'success' | 'danger' = 'success';
 
-  constructor(private gastosService: GastosService) {
+  constructor(
+    private gastosService: GastosService,
+    private router: Router
+  ) {
     addIcons({
       pencilOutline,
       trashOutline,
@@ -257,6 +266,39 @@ export class Tab2Page implements OnInit {
   getCategoryLabel(categoria: string | null): string {
     const normalized = this.normalizeCategoria(categoria);
     return normalized === 'Otros' ? 'Otros' : normalized;
+  }
+
+  toggleActions(gastoId: number): void {
+    this.activeCardId = this.activeCardId === gastoId ? null : gastoId;
+  }
+
+  editarGasto(gasto: gastos): void {
+    this.router.navigate(['/tabs/nuevo-gasto'], {
+      state: { gasto },
+    });
+  }
+
+  async eliminarGasto(gastoId: number): Promise<void> {
+    const { error } = await this.gastosService.deleteGasto(gastoId);
+
+    if (error) {
+      this.presentToast('No se pudo borrar el gasto.', 'danger');
+      return;
+    }
+
+    this.gastos = this.gastos.filter((item) => item.id !== gastoId);
+    this.activeCardId = null;
+    this.presentToast('Gasto eliminado.', 'success');
+  }
+
+  presentToast(message: string, color: 'success' | 'danger'): void {
+    this.toastMessage = message;
+    this.toastColor = color;
+    this.isToastOpen = true;
+  }
+
+  setToastOpen(value: boolean): void {
+    this.isToastOpen = value;
   }
 
 

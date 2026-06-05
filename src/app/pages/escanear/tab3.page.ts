@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -8,14 +8,11 @@ import {
   IonButton,
   IonLabel,
   IonIcon,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
-import { Camera } from '@capacitor/camera';
-import { Capacitor } from '@capacitor/core';
-import {
-  CameraPreview,
-  CameraPreviewOptions,
-} from '@capacitor-community/camera-preview';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
@@ -24,6 +21,7 @@ import {
   trashOutline,
   sparkles,
 } from 'ionicons/icons';
+import { GeminiService } from '../../services/gemini.service';
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -37,75 +35,81 @@ import {
     IonButton,
     IonLabel,
     IonIcon,
+    IonSpinner,
     CommonModule,
   ],
 })
-export class Tab3Page implements OnDestroy {
-  constructor() {
+export class Tab3Page {
+  constructor(
+    private router: Router,
+    private geminiService: GeminiService
+  ) {
     addIcons({ cameraOutline, imageOutline, trashOutline, sparkles });
   }
 
-  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
-  isCameraActive = false;
   finalPhoto: string | null = null;
-  mediaStream: MediaStream | null = null;
+  photoBase64: string | null = null;
+  isAnalyzing = false;
+  errorMessage: string | null = null;
 
-  async startCamera() {
-    this.finalPhoto = null;
+  async takePhoto(): Promise<void> {
+    await this.capturePhoto(CameraSource.Camera);
+  }
+
+  async openGallery(): Promise<void> {
+    await this.capturePhoto(CameraSource.Photos);
+  }
+
+  async capturePhoto(source: CameraSource): Promise<void> {
+    this.errorMessage = null;
     try {
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
+      const photo = await Camera.getPhoto({
+        quality: 90,
+        resultType: CameraResultType.Base64,
+        source,
+        allowEditing: false,
       });
 
-      this.videoElement.nativeElement.srcObject = this.mediaStream;
-      this.isCameraActive = true;
-    } catch (error) {
-      console.error('Error al acceder a la cámara web:', error);
-      alert('Activa los permisos de la cámara en tu navegador, pa.');
-    }
-  }
-
-  async takePhoto() {
-    if (!this.videoElement.nativeElement) return;
-
-    const video = this.videoElement.nativeElement;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const context = canvas.getContext('2d');
-    context?.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    this.finalPhoto = canvas.toDataURL('image/jpeg', 0.9);
-
-    this.stopCamera();
-  }
-
-  async stopCamera() {
-    if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach((track) => track.stop());
-      this.mediaStream = null;
-    }
-    this.isCameraActive = false;
-  }
-
-  async openGallery() {
-    try {
-      const galeria = await Camera.chooseFromGallery({
-        allowMultipleSelection: false,
-      });
-
-      if (galeria.results && galeria.results.length > 0) {
-        this.finalPhoto = galeria.results[0].webPath ?? null;
+      if (!photo.base64String) {
+        this.errorMessage = 'No se pudo obtener la imagen.';
+        return;
       }
 
-      await this.stopCamera();
+      this.photoBase64 = photo.base64String;
+      this.finalPhoto = `data:image/jpeg;base64,${photo.base64String}`;
     } catch (error) {
-      console.error('Error abriendo galería:', error);
+      this.errorMessage = 'No se pudo abrir la cámara o la galería.';
     }
   }
 
-  ngOnDestroy() {
-    this.stopCamera();
+  clearPhoto(): void {
+    this.finalPhoto = null;
+    this.photoBase64 = null;
+    this.errorMessage = null;
+  }
+
+  async analyzeTicket(): Promise<void> {
+    if (!this.photoBase64 || this.isAnalyzing) {
+      return;
+    }
+
+    this.isAnalyzing = true;
+    this.errorMessage = null;
+
+    const { data, error } = await this.geminiService.analyzeTicket(this.photoBase64);
+
+    if (error || !data) {
+      this.errorMessage = error ?? 'No se pudo analizar el ticket.';
+      this.isAnalyzing = false;
+      return;
+    }
+
+    this.isAnalyzing = false;
+    this.router.navigate(['/tabs/confirmar-gasto'], {
+      state: {
+        foto: this.finalPhoto,
+        ...data,
+      },
+    });
   }
 }

@@ -21,7 +21,9 @@ import {
 
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, personCircle, calendarOutline } from 'ionicons/icons';
+import { Router } from '@angular/router';
 import { GastosService } from '../../services/gastos.service';
+import { gastos } from '../../models/gasto.model';
 
 @Component({
   selector: 'app-nuevo-gasto',
@@ -50,6 +52,7 @@ export class NuevoGastoPage implements OnInit {
   guardando = false;
   errorMessage: string | null = null;
   private readonly todayValue = new Date().toISOString().split('T')[0];
+  private editId: number | null = null;
 
   form = this.formBuilder.group({
     concepto: ['', [Validators.required, Validators.minLength(3)]],
@@ -62,7 +65,8 @@ export class NuevoGastoPage implements OnInit {
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
-    private gastosService: GastosService
+    private gastosService: GastosService,
+    private router: Router
   ) {
     addIcons({
       arrowBackOutline,
@@ -72,6 +76,21 @@ export class NuevoGastoPage implements OnInit {
   }
 
   ngOnInit() {
+    const state = (this.router.getCurrentNavigation()?.extras.state ?? history.state) as {
+      gasto?: gastos;
+    };
+
+    if (state?.gasto) {
+      this.editId = state.gasto.id;
+      this.form.setValue({
+        concepto: state.gasto.concepto ?? '',
+        monto: Number(state.gasto.monto ?? 0),
+        fecha_gasto: state.gasto.fecha_gasto ?? this.todayValue,
+        categoria: state.gasto.categoria ?? 'Otros',
+        metodo_pago: state.gasto.metodo_pago ?? 'Efectivo',
+        notas: state.gasto.notas ?? '',
+      });
+    }
   }
 
   seleccionarMetodo(metodo: string) {
@@ -89,29 +108,39 @@ export class NuevoGastoPage implements OnInit {
     this.errorMessage = null;
 
     const payload = this.form.getRawValue();
-    const { error } = await this.gastosService.addGasto({
-      concepto: payload.concepto.trim(),
-      monto: Number(payload.monto),
-      fecha_gasto: payload.fecha_gasto,
-      categoria: payload.categoria,
-      metodo_pago: payload.metodo_pago,
-      notas: payload.notas.trim(),
-    });
+    const concepto = payload.concepto.trim();
+    const notas = payload.notas.trim();
+    const monto = Number(payload.monto);
+    const fecha = payload.fecha_gasto;
+    const categoria = payload.categoria;
+    const metodo = payload.metodo_pago;
+
+    const { error } = this.editId
+      ? await this.gastosService.updateGasto(this.editId, {
+          concepto,
+          monto,
+          fecha_gasto: fecha,
+          categoria,
+          metodo_pago: metodo,
+          notas,
+        })
+      : await this.gastosService.addGasto({
+          concepto,
+          monto,
+          fecha_gasto: fecha,
+          categoria,
+          metodo_pago: metodo,
+          notas,
+        });
 
     if (error) {
       this.errorMessage = error;
-    } else {
-      this.form.reset({
-        concepto: '',
-        monto: 0,
-        fecha_gasto: this.todayValue,
-        categoria: '',
-        metodo_pago: '',
-        notas: '',
-      });
+      this.guardando = false;
+      return;
     }
 
     this.guardando = false;
+    this.router.navigateByUrl('/tabs/tab2');
   }
 
   isMetodoActivo(metodo: string): boolean {
@@ -123,6 +152,10 @@ export class NuevoGastoPage implements OnInit {
       this.form.controls.fecha_gasto.setValue(value);
       this.form.controls.fecha_gasto.markAsTouched();
     }
+  }
+
+  cancelar(): void {
+    this.router.navigateByUrl('/tabs/tab2');
   }
 
 }

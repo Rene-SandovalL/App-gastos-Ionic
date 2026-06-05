@@ -34,67 +34,88 @@
         <ion-label>Fecha</ion-label>
       </ion-chip>
       <div class="filter-divider"></div>
-      <ion-chip
-        class="filter-chip"
-        *ngFor="let filter of filters"
-        [class.active]="activeFilter === filter"
-        (click)="setFilter(filter)"
-      >
-        <ion-label>{{ filter }}</ion-label>
-      </ion-chip>
+      @for (filter of filters; track filter) {
+        <ion-chip
+          class="filter-chip"
+          [class.active]="activeFilter === filter"
+          (click)="setFilter(filter)"
+        >
+          <ion-label>{{ filter }}</ion-label>
+        </ion-chip>
+      }
     </div>
 
     <div class="expense-list">
-      <div
-        class="expense-card"
-        *ngFor="let gasto of gastos; trackBy: trackByGastoId"
-      >
-        <div class="expense-icon" [ngClass]="getCategoryClass(gasto.categoria)">
-          <ion-icon [name]="getCategoryIcon(gasto.categoria)"></ion-icon>
-        </div>
-        <div class="expense-info">
-          <h3>{{ gasto.concepto }}</h3>
-          <div class="expense-meta">
-            <span class="tag" [ngClass]="getCategoryClass(gasto.categoria)">
-              {{ getCategoryLabel(gasto.categoria) }}
-            </span>
-            <span class="date">{{ gasto.fecha_gasto | date:'dd/MM' }}</span>
+      @for (gasto of gastos; track gasto.id) {
+        <div
+          class="expense-card"
+          (click)="toggleActions(gasto.id)"
+        >
+          <div class="expense-icon" [ngClass]="getCategoryClass(gasto.categoria)">
+            <ion-icon [name]="getCategoryIcon(gasto.categoria)"></ion-icon>
+          </div>
+          <div class="expense-info">
+            <h3>{{ gasto.concepto }}</h3>
+            <div class="expense-meta">
+              <span class="tag" [ngClass]="getCategoryClass(gasto.categoria)">
+                {{ getCategoryLabel(gasto.categoria) }}
+              </span>
+              <span class="date">{{ gasto.fecha_gasto | date:'dd/MM' }}</span>
+            </div>
+          </div>
+          <div class="expense-right">
+            <div class="expense-amount">{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</div>
+            @if (activeCardId === gasto.id) {
+              <div class="expense-actions">
+                <ion-button
+                  fill="clear"
+                  class="action-button"
+                  aria-label="Editar gasto"
+                  (click)="$event.stopPropagation(); editarGasto(gasto)"
+                >
+                  <ion-icon name="pencil-outline"></ion-icon>
+                </ion-button>
+                <ion-button
+                  fill="clear"
+                  class="action-button delete"
+                  aria-label="Eliminar gasto"
+                  (click)="$event.stopPropagation(); eliminarGasto(gasto.id)"
+                >
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </div>
+            }
           </div>
         </div>
-        <div class="expense-right">
-          <div class="expense-amount">{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</div>
-          <div class="expense-actions">
-            <ion-button fill="clear" class="action-button" aria-label="Editar gasto">
-              <ion-icon name="pencil-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" class="action-button delete" aria-label="Eliminar gasto">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </div>
+      }
+    </div>
+
+    @if (isLoading) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando gastos...</p>
+      </div>
+    }
+
+    @if (!isLoading && gastos.length === 0) {
+      <div class="empty-state">
+        <div class="empty-illustration">
+          <ion-icon name="receipt-outline"></ion-icon>
         </div>
+        <p>¿No encuentras lo que buscas?</p>
+        <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
       </div>
-    </div>
+    }
 
-    <div class="loading-state" *ngIf="isLoading">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando gastos...</p>
-    </div>
-
-    <div class="empty-state" *ngIf="!isLoading && gastos.length === 0">
-      <div class="empty-illustration">
-        <ion-icon name="receipt-outline"></ion-icon>
+    @if (!isLoading && reachedEnd && gastos.length > 0) {
+      <div class="empty-state">
+        <div class="empty-illustration">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </div>
+        <p>Terminaste de ver todos los gastos.</p>
+        <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
       </div>
-      <p>¿No encuentras lo que buscas?</p>
-      <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
-    </div>
-
-    <div class="empty-state" *ngIf="!isLoading && reachedEnd && gastos.length > 0">
-      <div class="empty-illustration">
-        <ion-icon name="receipt-outline"></ion-icon>
-      </div>
-      <p>Terminaste de ver todos los gastos.</p>
-      <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
-    </div>
+    }
   </div>
 
   <ion-infinite-scroll
@@ -113,6 +134,14 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [color]="toastColor"
+    duration="2000"
+    (didDismiss)="setToastOpen(false)"
+  ></ion-toast>
 </ion-content>
 
 <ion-modal [isOpen]="isDateModalOpen" (didDismiss)="closeDateModal()">

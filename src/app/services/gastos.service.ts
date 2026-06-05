@@ -93,4 +93,29 @@ export class GastosService {
 
     return { error: error ? error.message : null };
   }
+
+  async updateGasto(id: number, payload: {
+    concepto: string;
+    monto: number;
+    fecha_gasto: string;
+    categoria: string;
+    metodo_pago: string;
+    notas: string;
+  }): Promise<{ error: string | null }> {
+    const { error } = await this.supabaseService.getClient().from('gastos').update({
+      Concepto: payload.concepto,
+      Monto: payload.monto,
+      Fecha_gasto: payload.fecha_gasto,
+      Categoria: payload.categoria,
+      Metodo_pago: payload.metodo_pago,
+      Notas: payload.notas,
+    }).eq('id', id);
+
+    return { error: error ? error.message : null };
+  }
+
+  async deleteGasto(id: number): Promise<{ error: string | null }> {
+    const { error } = await this.supabaseService.getClient().from('gastos').delete().eq('id', id);
+    return { error: error ? error.message : null };
+  }
 }

@@ -21,15 +21,7 @@
     <div
       class="scan-preview"
       id="cameraSpace"
-      [class.camera-active]="isCameraActive"
     >
-      <video
-        #videoElement
-        autoplay
-        playsinline
-        [class.show-video]="isCameraActive && !finalPhoto"
-      ></video>
-
       @if (finalPhoto) {
       <img [src]="finalPhoto" class="foto-result" />
       } @else {
@@ -37,8 +29,7 @@
         <div class="scan-guide"></div>
       </div>
       <div class="scan-hint">
-        {{ isCameraActive ? 'Enfoca el ticket...' : 'Alinea el ticket con el
-        recuadro' }}
+        {{ finalPhoto ? 'Ticket listo para analizar' : 'Alinea el ticket con el recuadro' }}
       </div>
       }
     </div>
@@ -47,13 +38,13 @@
       <ion-button
         expand="block"
         class="primary-action"
-        (click)="isCameraActive ? takePhoto() : startCamera()"
+        (click)="takePhoto()"
       >
         <ion-icon
           slot="start"
-          [name]="isCameraActive ? 'aperture-outline' : 'camera-outline'"
+          name="camera-outline"
         ></ion-icon>
-        {{ isCameraActive ? 'Capturar' : 'Tomar foto' }}
+        Tomar foto
       </ion-button>
 
       <ion-button
@@ -70,17 +61,31 @@
       <div class="capture-thumb"></div>
       <div class="capture-info">
         <p>Captura reciente</p>
-        <strong>Ticket_20231024_123.jpg</strong>
+        <strong>{{ finalPhoto ? 'Ticket_capturado.jpg' : 'Sin captura' }}</strong>
       </div>
-      <ion-button fill="clear" class="delete-button">
+      <ion-button fill="clear" class="delete-button" (click)="clearPhoto()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
     </div>
 
-    <ion-button expand="block" class="ai-button">
-      <ion-icon slot="start" name="sparkles"></ion-icon>
-      Analizar con IA
+    <ion-button
+      expand="block"
+      class="ai-button"
+      [disabled]="!photoBase64 || isAnalyzing"
+      (click)="analyzeTicket()"
+    >
+      @if (isAnalyzing) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+        Analizando...
+      } @else {
+        <ion-icon slot="start" name="sparkles"></ion-icon>
+        Analizar con IA
+      }
     </ion-button>
+
+    @if (errorMessage) {
+      <p class="scan-error">{{ errorMessage }}</p>
+    }
 
     <p class="scan-note">
       Nuestra IA detectará automáticamente montos, fechas y categorías.

@@ -1,0 +1,117 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Gasto Facil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="icon-button">
+        <ion-icon name="notifications-outline" size="large" color="gray"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="confirmar-content">
+  <div class="page">
+    <h1 class="page-title">Confirmar gasto</h1>
+    <p class="page-subtitle">Revisa los datos detectados antes de guardar</p>
+
+    <ion-chip class="ai-chip">
+      <ion-icon name="sparkles"></ion-icon>
+      <ion-label>Datos obtenidos por IA</ion-label>
+    </ion-chip>
+
+    <div class="ticket-preview">
+      <img [src]="foto" alt="Ticket" />
+      <ion-button fill="solid" class="ticket-button">
+        <ion-icon name="eye-outline" slot="start"></ion-icon>
+        Ver ticket original
+      </ion-button>
+    </div>
+
+    <ion-card class="total-card">
+      <ion-card-content>
+        <p class="total-label">Monto total</p>
+        <div class="total-amount">{{ monto | currency:'USD':'symbol':'1.2-2' }}</div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="form-card">
+      <ion-card-content>
+        <p class="field-label">Establecimiento</p>
+        <ion-item class="field-item" lines="none">
+          <ion-icon name="storefront-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="establecimiento" placeholder="Nombre del negocio"></ion-input>
+        </ion-item>
+
+        <p class="field-label">Concepto</p>
+        <ion-item class="field-item" lines="none">
+          <ion-icon name="bag-handle-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="concepto" placeholder="Ej. Refresco y botana"></ion-input>
+        </ion-item>
+
+        <div class="field-row">
+          <div class="field-col">
+            <p class="field-label">Fecha</p>
+            <ion-item class="field-item" lines="none">
+              <ion-icon name="calendar-outline" slot="start"></ion-icon>
+              <ion-input [(ngModel)]="fecha" type="date"></ion-input>
+            </ion-item>
+          </div>
+          <div class="field-col">
+            <p class="field-label">Categoria sugerida</p>
+            <ion-item class="field-item" lines="none">
+              <ion-icon name="restaurant-outline" slot="start"></ion-icon>
+              <ion-select [(ngModel)]="categoria" interface="popover">
+                <ion-select-option value="Comida">Comida</ion-select-option>
+                <ion-select-option value="Servicios">Servicios</ion-select-option>
+                <ion-select-option value="Transporte">Transporte</ion-select-option>
+                <ion-select-option value="Salud">Salud</ion-select-option>
+                <ion-select-option value="Otros">Otros</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+        </div>
+
+        <p class="field-label">Metodo de pago</p>
+        <ion-item class="field-item" lines="none">
+          <ion-icon name="cash-outline" slot="start"></ion-icon>
+          <ion-select [(ngModel)]="metodo_pago" interface="popover">
+            <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+            <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
+            <ion-select-option value="Transferencia">Transferencia</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <p class="field-label">Notas</p>
+        <ion-item class="field-item" lines="none">
+          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          <ion-textarea [(ngModel)]="notas" rows="2"></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    @if (errorMessage) {
+      <ion-text color="danger" class="error-text">
+        <p>{{ errorMessage }}</p>
+      </ion-text>
+    }
+
+    <div class="action-buttons">
+      <ion-button expand="block" class="btn-primary" (click)="guardar()" [disabled]="guardando">
+        @if (guardando) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+          Guardando...
+        } @else {
+          Guardar gasto
+        }
+      </ion-button>
+      <ion-button expand="block" fill="outline" class="btn-secondary" routerLink="/tabs/tab3">
+        Corregir manualmente
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

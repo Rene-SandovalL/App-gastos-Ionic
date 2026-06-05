@@ -27,6 +27,11 @@ export const routes: Routes = [
           import('../pages/resumen/tab4.page').then((m) => m.Tab4Page),
       },
       {
+        path: 'confirmar-gasto',
+        loadComponent: () =>
+          import('../pages/confirmar-gasto/confirmar-gasto.page').then((m) => m.ConfirmarGastoPage),
+      },
+      {
         path: 'nuevo-gasto',
         loadComponent: () =>
           import('../pages/nuevo-gasto/nuevo-gasto.page').then((m) => m.NuevoGastoPage),
