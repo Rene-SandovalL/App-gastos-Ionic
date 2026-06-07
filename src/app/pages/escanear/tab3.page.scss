@@ -40,6 +40,47 @@ ion-title {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.scan-preview.camera-active {
+  background-image: none;
+  background-color: transparent;
+}
+
+.scan-preview.web-preview-active {
+	background-image: none;
+	background-color: #0b0f14;
+}
+
+.scan-preview.camera-active .scan-frame,
+.scan-preview.camera-active .scan-hint {
+	position: relative;
+	z-index: 2;
+}
+
+.camera-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.web-preview {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 26px;
+  z-index: 0;
+}
+
+.web-preview.show-web-preview {
+  display: block;
+}
+
 /* --- Recuadro Exterior (Resplandor Teal/Cian) --- */
 .scan-frame {
   position: absolute;
@@ -167,11 +208,6 @@ ion-title {
     top: 10%; /* Sube de golpe o con ease suave (ease-in-out maneja esto) */
     opacity: 0; /* Fade out rápido al reiniciar */
   }
-}
-
-.scan-preview.camera-active {
-  background-image: none !important;
-  background-color: transparent !important;
 }
 
 /* Estilo para que la foto que tomes llene el recuadro */

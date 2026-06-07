@@ -21,7 +21,16 @@
     <div
       class="scan-preview"
       id="cameraSpace"
+      [class.camera-active]="isPreviewActive"
+      [class.web-preview-active]="isWebPreviewActive"
     >
+      <video
+        #webVideo
+        class="web-preview"
+        [class.show-web-preview]="isWebPreviewActive"
+        playsinline
+        muted
+      ></video>
       @if (finalPhoto) {
       <img [src]="finalPhoto" class="foto-result" />
       } @else {
@@ -29,7 +38,7 @@
         <div class="scan-guide"></div>
       </div>
       <div class="scan-hint">
-        {{ finalPhoto ? 'Ticket listo para analizar' : 'Alinea el ticket con el recuadro' }}
+        {{ finalPhoto ? 'Ticket listo para analizar' : ((isPreviewActive || isWebPreviewActive) ? 'Alinea el ticket con el recuadro' : 'Abre la cámara para iniciar') }}
       </div>
       }
     </div>
@@ -44,7 +53,7 @@
           slot="start"
           name="camera-outline"
         ></ion-icon>
-        Tomar foto
+        {{ (isPreviewActive || isWebPreviewActive) ? 'Capturar' : 'Tomar foto' }}
       </ion-button>
 
       <ion-button

@@ -72,3 +72,10 @@ Thumbs.db
 
 /src/environments/environment.ts
 /src/environments/environment.prod.ts
+
+# Android / Gradle local artifacts
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
