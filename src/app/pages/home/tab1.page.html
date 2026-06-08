@@ -21,7 +21,7 @@
         <strong><p>Total del mes</p></strong>
         <ion-icon name="trending-up" size="large"></ion-icon>
       </div>
-      <strong><h1>$4,500.00</h1></strong>
+      <strong><h1>{{ totalMes | currency:'USD':'symbol':'1.2-2' }}</h1></strong>
       <div class="summary-pill">
         <ion-icon name="arrow-up-outline" ></ion-icon>
         <span>12% vs mes anterior</span>
@@ -35,7 +35,7 @@
         </div>
         <div>
           <p>Hoy</p>
-          <strong>$120</strong>
+          <strong>{{ totalHoy | currency:'USD':'symbol':'1.0-0' }}</strong>
         </div>
       </div>
       <div class="stat-card">
@@ -44,7 +44,7 @@
         </div>
         <div>
           <p>Gastos</p>
-          <strong>15</strong>
+          <strong>{{ totalGastosMes }}</strong>
         </div>
       </div>
       <div class="stat-card">
@@ -53,12 +53,12 @@
         </div>
         <div>
           <p>Top</p>
-          <strong style="color: rgb(127, 11, 11);">Comida</strong>
+          <strong [style.color]="topCategoryColor">{{ topCategoryName }}</strong>
         </div>
       </div>
     </section>
 
-    <section class="scan-card">
+    <section class="scan-card" (click)="goToScan()">
       <div class="scan-icon">
         <ion-icon name="qr-code-outline"></ion-icon>
       </div>
@@ -72,49 +72,39 @@
     <section class="recent-section">
       <div class="section-header">
         <h2>Gastos recientes</h2>
-        <a class="link" href="#">Ver mas</a>
+        <a class="link" (click)="goToGastos()">Ver mas</a>
       </div>
 
-      <ion-list class="recent-list">
-        <ion-item lines="none" class="recent-item">
-          <ion-avatar slot="start">
-            <div class="avatar-icon">
-              <ion-icon name="cart-outline"></ion-icon>
-            </div>
-          </ion-avatar>
-          <ion-label>
-            <h3>Compra en OXXO</h3>
-            <p>Hoy, 2:30 PM</p>
-          </ion-label>
-          <div class="amount negative">-$85.00</div>
-        </ion-item>
+      @if (!isLoading) {
+        <ion-list class="recent-list">
+          @for (gasto of gastosRecientes; track gasto.id) {
+            <ion-item lines="none" class="recent-item">
+              <ion-avatar slot="start">
+                <div class="avatar-icon" [ngStyle]="getRecentIconStyle(gasto)">
+                  <ion-icon [name]="getRecentIcon(gasto)"></ion-icon>
+                </div>
+              </ion-avatar>
+              <ion-label>
+                <h3>{{ gasto.concepto }}</h3>
+                <p>{{ formatRecentDate(gasto.fecha_gasto) }}</p>
+              </ion-label>
+              <div class="amount negative">-{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</div>
+            </ion-item>
+          }
+        </ion-list>
+      }
 
-        <ion-item lines="none" class="recent-item">
-          <ion-avatar slot="start">
-            <div class="avatar-icon">
-              <ion-icon name="car-outline"></ion-icon>
-            </div>
-          </ion-avatar>
-          <ion-label>
-            <h3>Transporte en taxi</h3>
-            <p>Ayer, 8:15 PM</p>
-          </ion-label>
-          <div class="amount negative">-$150.00</div>
-        </ion-item>
+      @if (isLoading) {
+        <div class="loading-box">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      }
 
-        <ion-item lines="none" class="recent-item">
-          <ion-avatar slot="start">
-            <div class="avatar-icon">
-              <ion-icon name="cafe-outline"></ion-icon>
-            </div>
-          </ion-avatar>
-          <ion-label>
-            <h3>Comida en cafeteria</h3>
-            <p>12 Oct, 11:00 AM</p>
-          </ion-label>
-          <div class="amount negative">-$120.00</div>
-        </ion-item>
-      </ion-list>
+      @if (!isLoading && gastosRecientes.length === 0) {
+        <div class="loading-box">
+          <p>No hay gastos recientes este mes.</p>
+        </div>
+      }
     </section>
 
     <section class="motivation-card">
@@ -124,7 +114,7 @@
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/nuevo-gasto">
+    <ion-fab-button routerLink="/tabs/nuevo-gasto">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

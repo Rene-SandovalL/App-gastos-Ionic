@@ -268,6 +268,14 @@ export class Tab2Page implements OnInit {
     return normalized === 'Otros' ? 'Otros' : normalized;
   }
 
+  getCategoriaNombre(gasto: gastos): string | null {
+    return gasto.categorias?.nombre ?? gasto.categoria;
+  }
+
+  getCategoriaIcono(gasto: gastos): string {
+    return gasto.categorias?.icono ?? this.getCategoryIcon(this.getCategoriaNombre(gasto));
+  }
+
   toggleActions(gastoId: number): void {
     this.activeCardId = this.activeCardId === gastoId ? null : gastoId;
   }

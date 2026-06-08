@@ -29,7 +29,7 @@ import {
   medkitOutline,
 } from 'ionicons/icons';
 import { GastosService } from '../../services/gastos.service';
-import { gastos } from '../../models/gasto.model';
+import { categoria, gastos } from '../../models/gasto.model';
 
 @Component({
   selector: 'app-tab4',
@@ -72,14 +72,7 @@ export class Tab4Page implements OnInit {
     icon: string;
     cssClass: string;
   }> = [];
-
-  private readonly categoryConfig = [
-    { key: 'Servicio', label: 'Servicios', color: '#d32f2f', icon: 'wifi-outline', cssClass: 'servicios' },
-    { key: 'Comida', label: 'Comida', color: '#f57c00', icon: 'restaurant-outline', cssClass: 'comida' },
-    { key: 'Salud', label: 'Salud', color: '#388e3c', icon: 'medkit-outline', cssClass: 'salud' },
-    { key: 'Otros', label: 'Otros', color: '#757575', icon: 'cart-outline', cssClass: 'otros' },
-    { key: 'Transporte', label: 'Transporte', color: '#1976d2', icon: 'car-outline', cssClass: 'transporte' },
-  ];
+  categoriasCatalogo: categoria[] = [];
 
   constructor(private gastosService: GastosService) {
     addIcons({
@@ -103,6 +96,15 @@ export class Tab4Page implements OnInit {
     this.errorMessage = null;
 
     const { fechaInicio, fechaFin } = this.getMesActualRango();
+    const { data: categorias, error: categoriasError } = await this.gastosService.getCategorias();
+
+    if (categoriasError) {
+      this.errorMessage = categoriasError;
+      this.isLoading = false;
+      return;
+    }
+
+    this.categoriasCatalogo = categorias;
     const gastosMes = await this.fetchGastosMes(fechaInicio, fechaFin);
 
     this.totalCount = gastosMes.length;
@@ -141,30 +143,50 @@ export class Tab4Page implements OnInit {
   }
 
   private buildCategoryStats(items: gastos[]): void {
-    const totals = new Map<string, number>();
-    this.categoryConfig.forEach((category) => totals.set(category.key, 0));
+    const totalsByName = new Map<string, number>();
+    this.categoriasCatalogo.forEach((category) => totalsByName.set(category.nombre.toLowerCase(), 0));
 
     items.forEach((gasto) => {
-      const key = this.normalizeCategory(gasto.categoria);
-      totals.set(key, (totals.get(key) ?? 0) + Number(gasto.monto || 0));
+      const nombre = this.resolveCategoryName(gasto);
+      const key = nombre.toLowerCase();
+      totalsByName.set(key, (totalsByName.get(key) ?? 0) + Number(gasto.monto || 0));
     });
 
     const total = this.totalMes || 0;
-    this.categoryBreakdown = this.categoryConfig.map((category) => {
-      const amount = totals.get(category.key) ?? 0;
+    this.categoryBreakdown = this.categoriasCatalogo.map((category) => {
+      const amount = totalsByName.get(category.nombre.toLowerCase()) ?? 0;
       const percent = total > 0 ? (amount / total) * 100 : 0;
       return {
-        label: category.label,
+        label: category.nombre,
         amount,
         percent,
-        color: category.color,
-        icon: category.icon,
-        cssClass: category.cssClass,
+        color: category.color || '#757575',
+        icon: category.icono || 'cart-outline',
+        cssClass: this.getCssClassFromName(category.nombre),
       };
-    });
+    }).sort((a, b) => b.amount - a.amount);
 
     this.donutGradient = this.buildDonutGradient(this.categoryBreakdown);
     this.updateTopCategory();
+  }
+
+  private resolveCategoryName(gasto: gastos): string {
+    if (gasto.categorias?.nombre) {
+      return gasto.categorias.nombre;
+    }
+
+    if (gasto.categoria_id) {
+      const byId = this.categoriasCatalogo.find((cat) => cat.id === gasto.categoria_id);
+      if (byId) {
+        return byId.nombre;
+      }
+    }
+
+    if (gasto.categoria?.trim()) {
+      return gasto.categoria.trim();
+    }
+
+    return 'Otros';
   }
 
   private updateTopCategory(): void {
@@ -197,18 +219,23 @@ export class Tab4Page implements OnInit {
     return `conic-gradient(${segments.join(', ')})`;
   }
 
-  private normalizeCategory(categoria: string | null): string {
-    if (!categoria) {
-      return 'Otros';
+  private getCssClassFromName(nombre: string): string {
+    const normalized = nombre.trim().toLowerCase();
+
+    if (normalized === 'comida') {
+      return 'comida';
+    }
+    if (normalized === 'salud') {
+      return 'salud';
+    }
+    if (normalized === 'transporte') {
+      return 'transporte';
+    }
+    if (normalized === 'servicio' || normalized === 'servicios') {
+      return 'servicios';
     }
 
-    const trimmed = categoria.trim();
-    if (trimmed.toLowerCase() === 'servicios') {
-      return 'Servicio';
-    }
-
-    const match = this.categoryConfig.find((item) => item.label.toLowerCase() === trimmed.toLowerCase());
-    return match ? match.key : 'Otros';
+    return 'otros';
   }
 
   private getMesActualRango(): { fechaInicio: string; fechaFin: string } {

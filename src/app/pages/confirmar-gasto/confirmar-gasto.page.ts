@@ -36,6 +36,7 @@ import {
   restaurantOutline,
 } from 'ionicons/icons';
 import { GastosService } from '../../services/gastos.service';
+import { categoria } from '../../models/gasto.model';
 
 @Component({
   selector: 'app-confirmar-gasto',
@@ -72,8 +73,10 @@ export class ConfirmarGastoPage implements OnInit {
   concepto = '';
   fecha = '';
   categoria = 'Otros';
+  categoriaId: number | null = null;
   metodo_pago = 'Efectivo';
   notas = 'Escaneado desde ticket';
+  categoriasDisponibles: categoria[] = [];
 
   guardando = false;
   errorMessage: string | null = null;
@@ -109,6 +112,22 @@ export class ConfirmarGastoPage implements OnInit {
     this.concepto = state.concepto ?? '';
     this.fecha = state.fecha ?? new Date().toISOString().split('T')[0];
     this.categoria = this.normalizeCategoria(state.categoria ?? 'Otros');
+
+    this.loadCategorias();
+  }
+
+  private async loadCategorias(): Promise<void> {
+    const { data, error } = await this.gastosService.getCategorias();
+    if (error) {
+      this.errorMessage = error;
+      return;
+    }
+
+    this.categoriasDisponibles = data;
+    const match = this.categoriasDisponibles.find(
+      (item) => item.nombre.toLowerCase() === this.categoria.toLowerCase()
+    );
+    this.categoriaId = match?.id ?? this.categoriasDisponibles[0]?.id ?? null;
   }
 
   async guardar(): Promise<void> {
@@ -119,12 +138,18 @@ export class ConfirmarGastoPage implements OnInit {
     this.guardando = true;
     this.errorMessage = null;
 
+    if (!this.categoriaId) {
+      this.errorMessage = 'No se encontro una categoría válida.';
+      this.guardando = false;
+      return;
+    }
+
     const conceptoFinal = this.buildConcepto();
     const { error } = await this.gastosService.addGasto({
       concepto: conceptoFinal,
       monto: Number(this.monto),
       fecha_gasto: this.fecha,
-      categoria: this.categoria,
+      categoria_id: this.categoriaId,
       metodo_pago: this.metodo_pago,
       notas: this.notas,
     });

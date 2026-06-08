@@ -118,6 +118,7 @@ ion-title {
   gap: 12px;
   color: #1f2a44;
   border: 1px solid #c6c7c9;
+  cursor: pointer;
 }
 
 .scan-icon {
@@ -163,6 +164,7 @@ ion-title {
   color: #2f6be8;
   font-size: 14px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .recent-list {
@@ -208,6 +210,12 @@ ion-title {
 
 .amount.negative {
   color: #ef4444;
+}
+
+.loading-box {
+  margin-top: 12px;
+  text-align: center;
+  color: #6b7280;
 }
 
 .motivation-card {

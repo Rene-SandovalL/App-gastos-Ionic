@@ -65,12 +65,10 @@
             <p class="field-label">Categoria sugerida</p>
             <ion-item class="field-item" lines="none">
               <ion-icon name="restaurant-outline" slot="start"></ion-icon>
-              <ion-select [(ngModel)]="categoria" interface="popover">
-                <ion-select-option value="Comida">Comida</ion-select-option>
-                <ion-select-option value="Servicios">Servicios</ion-select-option>
-                <ion-select-option value="Transporte">Transporte</ion-select-option>
-                <ion-select-option value="Salud">Salud</ion-select-option>
-                <ion-select-option value="Otros">Otros</ion-select-option>
+              <ion-select [(ngModel)]="categoriaId" interface="popover">
+                @for (categoria of categoriasDisponibles; track categoria.id) {
+                  <ion-select-option [value]="categoria.id">{{ categoria.nombre }}</ion-select-option>
+                }
               </ion-select>
             </ion-item>
           </div>

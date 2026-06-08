@@ -84,17 +84,26 @@
       </div>
 
       <div class="col-half">
-        <p class="input-label">Categoría</p>
+        <div class="label-row">
+          <p class="input-label">Categoría</p>
+          <ion-button
+            fill="clear"
+            size="small"
+            class="add-category-btn"
+            (click)="abrirNuevaCategoriaModal()"
+            type="button"
+          >
+            <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
         <div class="custom-bubble">
-          <ion-select placeholder="Seleccionar" interface="popover" formControlName="categoria" style="color: rgb(82, 82, 82)">
-            <ion-select-option value="Comida">Comida</ion-select-option>
-            <ion-select-option value="Servicio">Servicio</ion-select-option>
-            <ion-select-option value="Transporte">Transporte</ion-select-option>
-            <ion-select-option value="Salud">Salud</ion-select-option>
-            <ion-select-option value="Otros">Otros</ion-select-option>
+          <ion-select placeholder="Seleccionar" interface="popover" formControlName="categoria_id" style="color: rgb(82, 82, 82)">
+            @for (categoria of categoriasDisponibles; track categoria.id) {
+              <ion-select-option [value]="categoria.id">{{ categoria.nombre }}</ion-select-option>
+            }
           </ion-select>
         </div>
-        @if (form.controls.categoria.touched && form.controls.categoria.hasError('required')) {
+        @if (form.controls.categoria_id.touched && (form.controls.categoria_id.hasError('required') || form.controls.categoria_id.hasError('min'))) {
           <ion-text color="danger"><p>La categoría es requerida.</p></ion-text>
         }
       </div>
@@ -178,4 +187,74 @@
       </ion-button>
     </div>
   </form>
+
+  <ion-modal
+    cssClass="categoria-sheet-modal"
+    [isOpen]="isNuevaCategoriaModalOpen"
+    [breakpoints]="[0, 0.65, 0.85]"
+    [initialBreakpoint]="0.65"
+    [keepContentsMounted]="true"
+    (didDismiss)="cerrarNuevaCategoriaModal()"
+  >
+    <ng-template>
+      <div class="sheet-container">
+        <div class="sheet-header">
+          <h2>Nueva Categoría</h2>
+          <ion-button fill="clear" (click)="cerrarNuevaCategoriaModal()" type="button">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p class="input-label">Nombre</p>
+        <div class="custom-bubble">
+          <ion-input
+            placeholder="Ej. Entretenimiento"
+            [(ngModel)]="nuevaCategoria.nombre"
+            [ngModelOptions]="{ standalone: true }"
+          ></ion-input>
+        </div>
+
+        <p class="input-label">Color</p>
+        <div class="color-picker-wrap">
+          <input
+            type="color"
+            [(ngModel)]="nuevaCategoria.color"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <span>{{ nuevaCategoria.color }}</span>
+        </div>
+
+        <p class="input-label">Icono</p>
+        <div class="icon-picker-grid">
+          <button
+            type="button"
+            class="icon-tile"
+            *ngFor="let icono of iconosDisponibles"
+            [class.selected]="esIconoSeleccionado(icono)"
+            (click)="seleccionarIconoCategoria(icono)"
+          >
+            <ion-icon [name]="icono"></ion-icon>
+          </button>
+        </div>
+
+        @if (errorNuevaCategoria) {
+          <ion-text color="danger"><p>{{ errorNuevaCategoria }}</p></ion-text>
+        }
+
+        <ion-button
+          expand="block"
+          class="btn-primary"
+          type="button"
+          [disabled]="guardandoCategoria || !nuevaCategoria.nombre.trim()"
+          (click)="guardarNuevaCategoria()"
+        >
+          @if (guardandoCategoria) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            Guardar
+          }
+        </ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
