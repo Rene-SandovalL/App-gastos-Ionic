@@ -9,7 +9,6 @@ type GastoRow = {
   Monto: number;
   Fecha_gasto: string;
   categoria_id: number | null;
-  Categoria: string | null;
   Metodo_pago: string | null;
   Notas: string | null;
   categorias?: {
@@ -41,21 +40,26 @@ export class GastosService {
   async getGastos(params: {
     limit: number;
     offset: number;
+    categoriaId?: number | null;
     categoria?: string | null;
     fechaInicio?: string | null;
     fechaFin?: string | null;
     searchTerm?: string | null;
   }): Promise<{ data: gastos[]; error: string | null }> {
-    const { limit, offset, categoria, fechaInicio, fechaFin, searchTerm } = params;
+    const { limit, offset, categoriaId, categoria, fechaInicio, fechaFin, searchTerm } = params;
     const from = Math.max(0, offset);
     const to = Math.max(from, from + Math.max(1, limit) - 1);
 
     let query = this.supabaseService
       .getClient()
       .from('gastos')
-      .select('id, created_at, Concepto, Monto, Fecha_gasto, categoria_id, Categoria, Metodo_pago, Notas, categorias(id, nombre, color, icono)')
+      .select('id, created_at, Concepto, Monto, Fecha_gasto, categoria_id, Metodo_pago, Notas, categorias(id, nombre, color, icono)')
       .order('Fecha_gasto', { ascending: false })
       .range(from, to);
+
+    if (categoriaId && categoriaId > 0) {
+      query = query.eq('categoria_id', categoriaId);
+    }
 
     if (categoria && categoria !== 'Todos') {
       query = query.eq('categorias.nombre', categoria);
@@ -88,7 +92,7 @@ export class GastosService {
       monto: row.Monto,
       fecha_gasto: row.Fecha_gasto,
       categoria_id: row.categoria_id ? Number(row.categoria_id) : null,
-      categoria: row.Categoria,
+      categoria: null,
       metodo_pago: row.Metodo_pago,
       notas: row.Notas,
       categorias: categoriaRelacion

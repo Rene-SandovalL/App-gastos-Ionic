@@ -18,17 +18,30 @@ import {
 import { addIcons } from 'ionicons';
 import {
   add,
+  airplaneOutline,
   arrowUpOutline,
+  buildOutline,
+  busOutline,
+  cafeOutline,
   calendarOutline,
   carOutline,
   cartOutline,
   chevronForward,
+  fastFoodOutline,
+  filmOutline,
+  fitnessOutline,
+  gameControllerOutline,
+  giftOutline,
+  homeOutline,
+  schoolOutline,
+  shirtOutline,
   notificationsOutline,
   personCircle,
   qrCodeOutline,
   receiptOutline,
   restaurantOutline,
   trendingUp,
+  walletOutline,
   wifiOutline,
   medkitOutline,
 } from 'ionicons/icons';
@@ -70,7 +83,8 @@ export class Tab1Page implements OnInit {
   totalHoy = 0;
   totalGastosMes = 0;
   topCategoryName = 'Sin datos';
-  topCategoryColor = '#5c6671';
+  topCategoryColor = 'black';
+  topCategoryIcon = 'restaurant-outline';
 
   gastosRecientes: gastos[] = [];
 
@@ -80,17 +94,30 @@ export class Tab1Page implements OnInit {
   ) {
     addIcons({
       add,
+      airplaneOutline,
       arrowUpOutline,
+      buildOutline,
+      busOutline,
+      cafeOutline,
       calendarOutline,
       carOutline,
       cartOutline,
       chevronForward,
+      fastFoodOutline,
+      filmOutline,
+      fitnessOutline,
+      gameControllerOutline,
+      giftOutline,
+      homeOutline,
+      schoolOutline,
+      shirtOutline,
       notificationsOutline,
       personCircle,
       qrCodeOutline,
       receiptOutline,
       restaurantOutline,
       trendingUp,
+      walletOutline,
       wifiOutline,
       medkitOutline,
     });
@@ -157,30 +184,34 @@ export class Tab1Page implements OnInit {
   }
 
   private resolveTopCategory(gastosMes: gastos[]): void {
-    const totals = new Map<string, { amount: number; color: string }>();
+    const totals = new Map<string, { amount: number; color: string; icon: string }>();
 
     gastosMes.forEach((gasto) => {
       const nombre = gasto.categorias?.nombre ?? gasto.categoria ?? 'Otros';
       const color = gasto.categorias?.color ?? '#5c6671';
+      const icon = gasto.categorias?.icono ?? 'restaurant-outline';
       const key = nombre.trim();
       const current = totals.get(key);
 
       if (current) {
         current.amount += Number(gasto.monto || 0);
+        if (current.icon === 'restaurant-outline' && gasto.categorias?.icono) {
+          current.icon = gasto.categorias.icono;
+        }
       } else {
-        totals.set(key, { amount: Number(gasto.monto || 0), color });
+        totals.set(key, { amount: Number(gasto.monto || 0), color, icon });
       }
     });
 
     if (totals.size === 0) {
       this.topCategoryName = 'Sin datos';
-      this.topCategoryColor = '#5c6671';
+      this.topCategoryIcon = 'restaurant-outline';
       return;
     }
 
     const top = [...totals.entries()].sort((a, b) => b[1].amount - a[1].amount)[0];
     this.topCategoryName = top[0];
-    this.topCategoryColor = top[1].color;
+    this.topCategoryIcon = top[1].icon;
   }
 
   goToScan(): void {

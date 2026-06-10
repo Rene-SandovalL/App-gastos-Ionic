@@ -49,3 +49,44 @@
 .categoria-sheet-modal::part(backdrop) {
 	background: rgba(31, 42, 68, 0.35);
 }
+
+/* Modales de filtros de gastos con tema claro fijo */
+.gastos-sheet-modal {
+	--border-radius: 24px 24px 0 0;
+}
+
+.gastos-sheet-modal::part(content) {
+	background: #f5f7fb;
+	border-radius: 24px 24px 0 0;
+	color-scheme: light;
+}
+
+.gastos-sheet-modal::part(backdrop) {
+	background: rgba(31, 42, 68, 0.35);
+}
+
+.gastos-sheet-modal ion-toolbar {
+	--background: #f5f7fb;
+	--color: #1f2a44;
+	--border-color: #dbe3f0;
+}
+
+.gastos-sheet-modal ion-title,
+.gastos-sheet-modal ion-button {
+	color: #1f5de2;
+}
+
+.gastos-sheet-modal ion-content {
+	--background: #f5f7fb;
+	--color: #1f2a44;
+}
+
+.gastos-sheet-modal ion-datetime {
+	--background: #ffffff;
+	--background-rgb: 255, 255, 255;
+	--title-color: #1f2a44;
+	--wheel-highlight-background: #e8eefb;
+	--wheel-fade-background-rgb: 245, 247, 251;
+	border-radius: 16px;
+	box-shadow: 0 10px 22px rgba(31, 42, 68, 0.08);
+}

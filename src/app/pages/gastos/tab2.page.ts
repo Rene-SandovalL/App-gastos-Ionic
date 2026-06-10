@@ -23,6 +23,9 @@ import {
 
 import { addIcons } from 'ionicons';
 import {
+  airplaneOutline,
+  buildOutline,
+  busOutline,
   pencilOutline,
   trashOutline,
   ellipsisVertical,
@@ -33,13 +36,22 @@ import {
   carOutline,
   wifiOutline,
   cafeOutline,
+  fastFoodOutline,
+  filmOutline,
+  fitnessOutline,
+  gameControllerOutline,
+  giftOutline,
+  homeOutline,
   cartOutline,
+  schoolOutline,
+  shirtOutline,
+  walletOutline,
   calendarOutline,
   receiptOutline,
 } from 'ionicons/icons';
 import { Router, RouterLink } from '@angular/router';
 import { GastosService } from '../../services/gastos.service';
-import { gastos } from '../../models/gasto.model';
+import { categoria, gastos } from '../../models/gasto.model';
 
 @Component({
   selector: 'app-tab2',
@@ -76,12 +88,17 @@ export class Tab2Page implements OnInit {
   pageSize = 12;
   offset = 0;
 
-  filters = ['Todos', 'Comida', 'Salud', 'Transporte', 'Servicio'];
+  filters: string[] = ['Todos'];
   activeFilter = 'Todos';
+  categoriasDisponibles: categoria[] = [];
 
   isDateModalOpen = false;
+  fechaSeleccionada: string | null = null;
   fechaInicio: string | null = null;
   fechaFin: string | null = null;
+
+  isMonthModalOpen = false;
+  selectedMonthValue: string | null = null;
   searchValue = '';
   private searchDebounceId?: number;
   activeCardId: number | null = null;
@@ -104,6 +121,18 @@ export class Tab2Page implements OnInit {
       carOutline,
       wifiOutline,
       cafeOutline,
+      fastFoodOutline,
+      busOutline,
+      gameControllerOutline,
+      filmOutline,
+      fitnessOutline,
+      schoolOutline,
+      homeOutline,
+      shirtOutline,
+      giftOutline,
+      walletOutline,
+      airplaneOutline,
+      buildOutline,
       cartOutline,
       calendarOutline,
       receiptOutline,
@@ -111,7 +140,52 @@ export class Tab2Page implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.initializeCurrentMonthRange();
+    await this.loadCategorias();
     await this.loadGastos(true);
+  }
+
+  private initializeCurrentMonthRange(): void {
+    const today = new Date();
+    this.applyMonthFromDate(today);
+    this.selectedMonthValue = this.toMonthInputValue(today);
+    this.fechaSeleccionada = null;
+  }
+
+  private applyMonthFromDate(date: Date): void {
+    const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+    const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    this.fechaInicio = this.toDateString(monthStart);
+    this.fechaFin = this.toDateString(monthEnd);
+  }
+
+  private toDateString(date: Date): string {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private toMonthInputValue(date: Date): string {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    return `${year}-${month}`;
+  }
+
+  async loadCategorias(): Promise<void> {
+    const { data, error } = await this.gastosService.getCategorias();
+
+    if (error) {
+      return;
+    }
+
+    this.categoriasDisponibles = data;
+    this.filters = ['Todos', ...data.map((item) => item.nombre)];
+
+    if (this.activeFilter !== 'Todos' && !this.filters.includes(this.activeFilter)) {
+      this.activeFilter = 'Todos';
+    }
   }
 
   async loadGastos(reset: boolean): Promise<void> {
@@ -131,7 +205,7 @@ export class Tab2Page implements OnInit {
     const { data, error } = await this.gastosService.getGastos({
       limit: this.pageSize,
       offset: this.offset,
-      categoria: this.activeFilter === 'Todos' ? null : this.activeFilter,
+      categoriaId: this.getActiveFilterCategoriaId(),
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       searchTerm: this.searchValue.trim() ? this.searchValue.trim() : null,
@@ -164,6 +238,18 @@ export class Tab2Page implements OnInit {
     await this.loadGastos(true);
   }
 
+  private getActiveFilterCategoriaId(): number | null {
+    if (this.activeFilter === 'Todos') {
+      return null;
+    }
+
+    const selected = this.categoriasDisponibles.find(
+      (item) => item.nombre.toLowerCase() === this.activeFilter.toLowerCase()
+    );
+
+    return selected?.id ?? null;
+  }
+
   onSearchChange(event: CustomEvent): void {
     const value = (event.detail as { value?: string | null }).value ?? '';
     this.searchValue = value;
@@ -186,25 +272,68 @@ export class Tab2Page implements OnInit {
   }
 
   async applyDateRange(): Promise<void> {
+    if (this.fechaSeleccionada) {
+      const dia = this.normalizeDateValue(this.fechaSeleccionada);
+      this.fechaInicio = dia;
+      this.fechaFin = dia;
+    }
+
     this.closeDateModal();
     await this.loadGastos(true);
   }
 
   clearDateRange(): void {
-    this.fechaInicio = null;
-    this.fechaFin = null;
+    this.fechaSeleccionada = null;
+    const current = this.selectedMonthValue
+      ? new Date(`${this.selectedMonthValue}-01T00:00:00`)
+      : new Date();
+
+    this.applyMonthFromDate(current);
+    this.closeDateModal();
+    this.loadGastos(true);
   }
 
   onFechaInicioChange(value: string | string[] | null | undefined): void {
     if (typeof value === 'string') {
-      this.fechaInicio = this.normalizeDateValue(value);
+      this.fechaSeleccionada = this.normalizeDateValue(value);
     }
   }
 
   onFechaFinChange(value: string | string[] | null | undefined): void {
-    if (typeof value === 'string') {
-      this.fechaFin = this.normalizeDateValue(value);
+    this.onFechaInicioChange(value);
+  }
+
+  openMonthModal(): void {
+    this.isMonthModalOpen = true;
+  }
+
+  closeMonthModal(): void {
+    this.isMonthModalOpen = false;
+  }
+
+  onMonthChange(value: string | string[] | null | undefined): void {
+    if (typeof value !== 'string') {
+      return;
     }
+
+    const monthValue = value.slice(0, 7);
+    if (/^\d{4}-\d{2}$/.test(monthValue)) {
+      this.selectedMonthValue = monthValue;
+    }
+  }
+
+  async applySelectedMonth(): Promise<void> {
+    if (!this.selectedMonthValue) {
+      this.closeMonthModal();
+      return;
+    }
+
+    const baseDate = new Date(`${this.selectedMonthValue}-01T00:00:00`);
+    this.applyMonthFromDate(baseDate);
+    this.fechaSeleccionada = null;
+
+    this.closeMonthModal();
+    await this.loadGastos(true);
   }
 
   normalizeDateValue(value: string): string {
@@ -274,6 +403,46 @@ export class Tab2Page implements OnInit {
 
   getCategoriaIcono(gasto: gastos): string {
     return gasto.categorias?.icono ?? this.getCategoryIcon(this.getCategoriaNombre(gasto));
+  }
+
+  getCategoriaIconStyle(gasto: gastos): Record<string, string> | null {
+    const color = gasto.categorias?.color;
+
+    if (!color) {
+      return null;
+    }
+
+    return {
+      color,
+      background: this.hexToRgba(color, 0.16),
+    };
+  }
+
+  getCategoriaTagStyle(gasto: gastos): Record<string, string> | null {
+    const color = gasto.categorias?.color;
+
+    if (!color) {
+      return null;
+    }
+
+    return {
+      color,
+      background: this.hexToRgba(color, 0.16),
+    };
+  }
+
+  private hexToRgba(hex: string, alpha: number): string {
+    const normalized = hex.replace('#', '').trim();
+
+    if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
+      return `rgba(92, 102, 113, ${alpha})`;
+    }
+
+    const r = parseInt(normalized.slice(0, 2), 16);
+    const g = parseInt(normalized.slice(2, 4), 16);
+    const b = parseInt(normalized.slice(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
   toggleActions(gastoId: number): void {

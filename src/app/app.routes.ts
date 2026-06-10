@@ -9,4 +9,8 @@ export const routes: Routes = [
     path: 'nuevo-gasto',
     loadComponent: () => import('./pages/nuevo-gasto/nuevo-gasto.page').then( m => m.NuevoGastoPage)
   },
+  {
+    path: 'confirmar-gasto',
+    loadComponent: () => import('./pages/confirmar-gasto/confirmar-gasto.page').then( m => m.ConfirmarGastoPage)
+  }
 ];

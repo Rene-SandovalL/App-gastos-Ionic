@@ -234,6 +234,10 @@ ion-title {
   margin: 0 auto 12px;
   border-radius: 32px;
   background: radial-gradient(circle at 30% 30%, #dbeafe, #e2e8f0 55%, #f8fafc 100%);
+  background-image: url('/assets/images/home-page-image.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
 }
 
 ion-fab-button {

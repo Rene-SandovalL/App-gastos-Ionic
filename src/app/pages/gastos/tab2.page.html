@@ -51,13 +51,13 @@
           class="expense-card"
           (click)="toggleActions(gasto.id)"
         >
-          <div class="expense-icon" [ngClass]="getCategoryClass(getCategoriaNombre(gasto))">
+          <div class="expense-icon" [ngClass]="getCategoryClass(getCategoriaNombre(gasto))" [ngStyle]="getCategoriaIconStyle(gasto)">
             <ion-icon [name]="getCategoriaIcono(gasto)"></ion-icon>
           </div>
           <div class="expense-info">
             <h3>{{ gasto.concepto }}</h3>
             <div class="expense-meta">
-              <span class="tag" [ngClass]="getCategoryClass(getCategoriaNombre(gasto))">
+              <span class="tag" [ngClass]="getCategoryClass(getCategoriaNombre(gasto))" [ngStyle]="getCategoriaTagStyle(gasto)">
                 {{ getCategoryLabel(getCategoriaNombre(gasto)) }}
               </span>
               <span class="date">{{ gasto.fecha_gasto | date:'dd/MM' }}</span>
@@ -103,7 +103,7 @@
           <ion-icon name="receipt-outline"></ion-icon>
         </div>
         <p>¿No encuentras lo que buscas?</p>
-        <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
+        <ion-button fill="clear" class="link-button" (click)="openMonthModal()">Revisar otros meses</ion-button>
       </div>
     }
 
@@ -113,7 +113,7 @@
           <ion-icon name="receipt-outline"></ion-icon>
         </div>
         <p>Terminaste de ver todos los gastos.</p>
-        <ion-button fill="clear" class="link-button">Revisar otros meses</ion-button>
+        <ion-button fill="clear" class="link-button" (click)="openMonthModal()">Revisar otros meses</ion-button>
       </div>
     }
   </div>
@@ -144,11 +144,17 @@
   ></ion-toast>
 </ion-content>
 
-<ion-modal [isOpen]="isDateModalOpen" (didDismiss)="closeDateModal()">
+<ion-modal
+  cssClass="gastos-sheet-modal"
+  [isOpen]="isDateModalOpen"
+  [breakpoints]="[0, 0.62, 0.85]"
+  [initialBreakpoint]="0.62"
+  (didDismiss)="closeDateModal()"
+>
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Filtrar por fecha</ion-title>
+        <ion-title>Filtrar por dia</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="closeDateModal()">Cerrar</ion-button>
         </ion-buttons>
@@ -156,24 +162,48 @@
     </ion-header>
     <ion-content class="date-modal-content">
       <div class="date-picker">
-        <p class="date-label">Desde</p>
+        <p class="date-label">Selecciona un dia</p>
         <ion-datetime
           presentation="date"
-          [value]="fechaInicio"
+          [value]="fechaSeleccionada ?? fechaInicio"
           (ionChange)="onFechaInicioChange($event.detail.value)"
-        ></ion-datetime>
-      </div>
-      <div class="date-picker">
-        <p class="date-label">Hasta</p>
-        <ion-datetime
-          presentation="date"
-          [value]="fechaFin"
-          (ionChange)="onFechaFinChange($event.detail.value)"
         ></ion-datetime>
       </div>
       <div class="date-actions">
         <ion-button fill="clear" (click)="clearDateRange()">Limpiar</ion-button>
         <ion-button (click)="applyDateRange()">Aplicar</ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-modal
+  cssClass="gastos-sheet-modal"
+  [isOpen]="isMonthModalOpen"
+  [breakpoints]="[0, 0.5, 0.72]"
+  [initialBreakpoint]="0.5"
+  (didDismiss)="closeMonthModal()"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Seleccionar mes</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeMonthModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="date-modal-content">
+      <div class="date-picker">
+        <p class="date-label">Mes y ano</p>
+        <ion-datetime
+          presentation="month-year"
+          [value]="selectedMonthValue"
+          (ionChange)="onMonthChange($event.detail.value)"
+        ></ion-datetime>
+      </div>
+      <div class="date-actions">
+        <ion-button (click)="applySelectedMonth()">Aplicar</ion-button>
       </div>
     </ion-content>
   </ng-template>
