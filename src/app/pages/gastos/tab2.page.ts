@@ -340,6 +340,46 @@ export class Tab2Page implements OnInit {
     return value.split('T')[0];
   }
 
+  formatFechaCorta(value: string): string {
+    const date = this.parseDateAsLocal(value);
+
+    if (!date) {
+      return value;
+    }
+
+    return date.toLocaleDateString('es-MX', {
+      day: '2-digit',
+      month: '2-digit',
+    });
+  }
+
+  private parseDateAsLocal(value: string): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    const onlyDate = value.split('T')[0];
+    const parts = onlyDate.split('-');
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const year = Number(parts[0]);
+    const monthIndex = Number(parts[1]) - 1;
+    const day = Number(parts[2]);
+
+    if (
+      !Number.isInteger(year) ||
+      !Number.isInteger(monthIndex) ||
+      !Number.isInteger(day)
+    ) {
+      return null;
+    }
+
+    return new Date(year, monthIndex, day, 12, 0, 0);
+  }
+
   trackByGastoId(index: number, gasto: gastos): number {
     return gasto.id;
   }

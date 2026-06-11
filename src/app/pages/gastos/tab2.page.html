@@ -60,7 +60,7 @@
               <span class="tag" [ngClass]="getCategoryClass(getCategoriaNombre(gasto))" [ngStyle]="getCategoriaTagStyle(gasto)">
                 {{ getCategoryLabel(getCategoriaNombre(gasto)) }}
               </span>
-              <span class="date">{{ gasto.fecha_gasto | date:'dd/MM' }}</span>
+              <span class="date">{{ formatFechaCorta(gasto.fecha_gasto) }}</span>
             </div>
           </div>
           <div class="expense-right">
@@ -161,17 +161,22 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="date-modal-content">
-      <div class="date-picker">
-        <p class="date-label">Selecciona un dia</p>
-        <ion-datetime
-          presentation="date"
-          [value]="fechaSeleccionada ?? fechaInicio"
-          (ionChange)="onFechaInicioChange($event.detail.value)"
-        ></ion-datetime>
-      </div>
-      <div class="date-actions">
-        <ion-button fill="clear" (click)="clearDateRange()">Limpiar</ion-button>
-        <ion-button (click)="applyDateRange()">Aplicar</ion-button>
+      <div class="date-modal-layout month-modal-layout">
+        <div class="date-picker centered">
+          <p class="date-label">Selecciona un dia</p>
+          <ion-datetime
+            presentation="date"
+            [showDefaultButtons]="true"
+            doneText="Confirmar"
+            cancelText="Cancelar"
+            [value]="fechaSeleccionada ?? fechaInicio"
+            (ionChange)="onFechaInicioChange($event.detail.value)"
+          ></ion-datetime>
+        </div>
+        <div class="date-actions">
+          <ion-button fill="clear" (click)="clearDateRange()">Limpiar</ion-button>
+          <ion-button (click)="applyDateRange()">Aplicar</ion-button>
+        </div>
       </div>
     </ion-content>
   </ng-template>
@@ -180,8 +185,8 @@
 <ion-modal
   cssClass="gastos-sheet-modal"
   [isOpen]="isMonthModalOpen"
-  [breakpoints]="[0, 0.5, 0.72]"
-  [initialBreakpoint]="0.5"
+  [breakpoints]="[0, 0.62]"
+  [initialBreakpoint]="0.62"
   (didDismiss)="closeMonthModal()"
 >
   <ng-template>
@@ -193,17 +198,19 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="date-modal-content">
-      <div class="date-picker">
-        <p class="date-label">Mes y ano</p>
-        <ion-datetime
-          presentation="month-year"
-          [value]="selectedMonthValue"
-          (ionChange)="onMonthChange($event.detail.value)"
-        ></ion-datetime>
-      </div>
-      <div class="date-actions">
-        <ion-button (click)="applySelectedMonth()">Aplicar</ion-button>
+    <ion-content class="date-modal-content month-modal-content">
+      <div class="date-modal-layout month-modal-layout">
+        <div class="date-picker centered">
+          <p class="date-label">Mes y año</p>
+          <ion-datetime
+            presentation="month-year"
+            [value]="selectedMonthValue"
+            (ionChange)="onMonthChange($event.detail.value)"
+          ></ion-datetime>
+          <div class="month-confirm-wrap">
+            <ion-button class="month-confirm-btn" (click)="applySelectedMonth()">Confirmar</ion-button>
+          </div>
+        </div>
       </div>
     </ion-content>
   </ng-template>

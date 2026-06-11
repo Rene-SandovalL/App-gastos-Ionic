@@ -294,6 +294,22 @@ ion-fab-button ion-icon {
 	--background: #f5f7fb;
 }
 
+.date-modal-layout {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 8px 0 20px;
+}
+
+.month-modal-layout {
+	min-height: 100%;
+	justify-content: space-between;
+	align-items: stretch;
+	padding: 6px 0 10px;
+}
+
 .date-picker {
 	padding: 16px 18px 0;
 }
@@ -302,6 +318,7 @@ ion-fab-button ion-icon {
 	margin: 0 0 10px;
 	font-weight: 600;
 	color: #2b343d;
+	text-align: center;
 }
 
 .date-actions {
@@ -310,4 +327,29 @@ ion-fab-button ion-icon {
 	justify-content: flex-end;
 	gap: 12px;
 }
+
+.month-modal-layout .date-actions {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.month-modal-layout .date-picker {
+	padding-top: 8px;
+}
+
+.month-modal-layout .date-picker.centered {
+	justify-content: flex-start;
+}
+
+.month-confirm-wrap {
+	display: flex;
+	justify-content: center;
+	margin-top: 12px;
+	padding-bottom: 8px;
+}
+
+.month-confirm-btn {
+	min-width: 160px;
+}
+
 

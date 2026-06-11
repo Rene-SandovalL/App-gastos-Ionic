@@ -72,6 +72,9 @@
               <ion-datetime
                 id="calendario-gasto"
                 presentation="date"
+                [showDefaultButtons]="true"
+                doneText="Confirmar"
+                cancelText="Cancelar"
                 [value]="form.controls.fecha_gasto.value"
                 (ionChange)="onFechaGastoChange($event.detail.value)"
               ></ion-datetime>

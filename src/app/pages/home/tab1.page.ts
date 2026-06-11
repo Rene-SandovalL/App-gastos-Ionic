@@ -147,7 +147,7 @@ export class Tab1Page implements OnInit {
 
     this.resolveTopCategory(gastosMes);
     this.gastosRecientes = [...gastosMes]
-      .sort((a, b) => new Date(b.fecha_gasto).getTime() - new Date(a.fecha_gasto).getTime())
+      .sort((a, b) => this.getSortableDateMs(b.fecha_gasto) - this.getSortableDateMs(a.fecha_gasto))
       .slice(0, 5);
 
     this.isLoading = false;
@@ -235,7 +235,11 @@ export class Tab1Page implements OnInit {
   }
 
   formatRecentDate(fecha: string): string {
-    const date = new Date(fecha);
+    const date = this.parseDateAsLocal(fecha);
+    if (!date) {
+      return fecha;
+    }
+
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
@@ -264,9 +268,9 @@ export class Tab1Page implements OnInit {
     const fin = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     return {
-      inicioMes: inicio.toISOString().split('T')[0],
-      finMes: fin.toISOString().split('T')[0],
-      hoy: now.toISOString().split('T')[0],
+      inicioMes: this.toDateStringLocal(inicio),
+      finMes: this.toDateStringLocal(fin),
+      hoy: this.toDateStringLocal(now),
     };
   }
 
@@ -286,6 +290,44 @@ export class Tab1Page implements OnInit {
     const b = parseInt(normalized.slice(4, 6), 16);
 
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  private toDateStringLocal(date: Date): string {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseDateAsLocal(value: string): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    const onlyDate = value.split('T')[0];
+    const parts = onlyDate.split('-');
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const year = Number(parts[0]);
+    const monthIndex = Number(parts[1]) - 1;
+    const day = Number(parts[2]);
+
+    if (
+      !Number.isInteger(year) ||
+      !Number.isInteger(monthIndex) ||
+      !Number.isInteger(day)
+    ) {
+      return null;
+    }
+
+    return new Date(year, monthIndex, day, 12, 0, 0);
+  }
+
+  private getSortableDateMs(value: string): number {
+    return this.parseDateAsLocal(value)?.getTime() ?? 0;
   }
 
 }
