@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar class="profile-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" text="" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="blue-header">
+    <div class="avatar-container">
+      <div class="initials-circle">
+        {{ userInitials }}
+      </div>
+    </div>
+  </div>
+
+  <div class="user-details ion-text-center">
+    <h1 class="user-name">{{ userName }}</h1>
+    <p class="user-email">{{ userEmail }}</p>
+  </div>
+
+    <ion-item button detail="true" (click)="onLogout()" class="logout-item">
+      <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+      <ion-label>Cerrar sesión</ion-label>
+    </ion-item>
+
+</ion-content>

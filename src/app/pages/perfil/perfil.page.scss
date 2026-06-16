@@ -1,0 +1,98 @@
+:host {
+  --ion-background-color: #ffffff;
+}
+
+// Toolbar azul
+ion-toolbar {
+  --background: #0095f6;
+  --color: white;
+  --border-width: 0;
+}
+
+// El bloque azul de fondo
+.blue-header {
+  background-color: #0095f6;
+  height: 140px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 50px; // Espacio para que el círculo no choque con el texto
+}
+
+// Contenedor del avatar/círculo
+.avatar-container {
+  position: absolute;
+  bottom: -40px; // Hace que el círculo baje y quede "encimado" al blanco
+}
+
+// El círculo con las iniciales (RS en tu ejemplo)
+.initials-circle {
+  width: 90px;
+  height: 90px;
+  background-color: #e0e0e0; // Gris claro
+  border: 4px solid white; // El borde blanco que se ve en la imagen
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+// Detalles del nombre y correo
+.user-details {
+  padding: 0 20px;
+  margin-bottom: 30px;
+
+  .user-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+  }
+
+  .user-email {
+    font-size: 16px;
+    color: #666;
+    margin-top: 0;
+  }
+}
+
+// Estilo de la lista de opciones
+.options-list {
+  margin-top: 10px;
+  background: transparent;
+
+  ion-item {
+    --padding-start: 20px;
+    --inner-padding-end: 20px;
+    height: 65px;
+    font-size: 16px;
+
+    ion-icon {
+      font-size: 24px;
+      margin-right: 15px;
+    }
+  }
+}
+
+
+.logout-item {
+  --background: #f79b9b;
+  --color: #eb3831;
+}
+
+.profile-toolbar {
+  --background: #f5f7fb;
+  --border-color: transparent;
+  padding: 6px 8px 4px;
+}
+
+ion-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1f5de2;
+}
