@@ -20,11 +20,6 @@ ion-toolbar {
   margin-bottom: 50px; // Espacio para que el círculo no choque con el texto
 }
 
-// Contenedor del avatar/círculo
-.avatar-container {
-  position: absolute;
-  bottom: -40px; // Hace que el círculo baje y quede "encimado" al blanco
-}
 
 // El círculo con las iniciales (RS en tu ejemplo)
 .initials-circle {
@@ -95,4 +90,48 @@ ion-title {
   font-size: 28px;
   font-weight: 600;
   color: #1f5de2;
+}
+
+.avatar-container {
+  position: absolute;
+  bottom: -45px;
+}
+
+// Estilo para la foto cuando ya se cargó
+.profile-image {
+  width: 90px;
+  height: 90px;
+  border: 4px solid white !important;
+  border-radius: 50% !important;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  background-color: white;
+}
+
+// El botón flotante (Badge)
+.edit-badge {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 32px;
+  height: 32px;
+  background-color: #0095f6; // Tu color azul primary
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+
+  ion-icon {
+    color: white;
+    font-size: 16px;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
 }

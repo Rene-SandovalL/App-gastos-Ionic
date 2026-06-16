@@ -10,9 +10,25 @@
 <ion-content>
   <div class="blue-header">
     <div class="avatar-container">
-      <div class="initials-circle">
-        {{ userInitials }}
+
+      @if (userAvatar) {
+        <img [src]="userAvatar" class="profile-image" />
+      } @else {
+        <div class="initials-circle">
+          @if (isUploading) {
+            <ion-spinner color="dark"></ion-spinner>
+          } @else {
+            <span>{{ userInitials }}</span>
+          }
+        </div>
+      }
+
+      <div class="edit-badge" (click)="fileInput.click()">
+        <ion-icon name="image-outline"></ion-icon>
       </div>
+
+      <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" hidden>
+
     </div>
   </div>
 
@@ -21,9 +37,9 @@
     <p class="user-email">{{ userEmail }}</p>
   </div>
 
-    <ion-item button detail="true" (click)="onLogout()" class="logout-item">
-      <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
-      <ion-label>Cerrar sesión</ion-label>
-    </ion-item>
+  <ion-item button detail="true" (click)="onLogout()" class="logout-item">
+    <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+    <ion-label>Cerrar sesión</ion-label>
+  </ion-item>
 
 </ion-content>

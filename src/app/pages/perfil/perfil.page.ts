@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonList, IonItem, IonIcon, IonLabel, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonList, IonItem, IonIcon, IonLabel, IonButton, IonSpinner } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { logOutOutline, personCircle, notificationsOutline } from 'ionicons/icons';
+import { logOutOutline, personCircle, notificationsOutline, imageOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './perfil.page.html',
   styleUrls: ['./perfil.page.scss'],
   standalone: true,
-  imports: [IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonList, IonItem, IonIcon, IonLabel, CommonModule, FormsModule]
+  imports: [IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonIcon, IonLabel, CommonModule, FormsModule]
 })
 export class PerfilPage implements OnInit {
 
@@ -20,19 +20,27 @@ export class PerfilPage implements OnInit {
   userEmail: string = '';
   userInitials: string = '??';
 
+  userAvatar: string | null = null;
+  isUploading: boolean = false;
+  userId: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {
-    addIcons({personCircle,notificationsOutline,logOutOutline});
+    addIcons({imageOutline,logOutOutline,personCircle,notificationsOutline});
   }
-
   async ngOnInit() {
     const user = await this.authService.getSession().then(res => res.session?.user);
 
     if (user) {
+      this.userId = user.id;
+
       this.userEmail = user.email || '';
       this.userName = user.user_metadata?.['full_name'] || user.user_metadata?.['username'] || 'Usuario';
+
+      this.userAvatar = user.user_metadata?.['avatar_url'] || null;
+
       this.generateInitials(this.userName);
     }
   }
@@ -52,6 +60,24 @@ export class PerfilPage implements OnInit {
       this.router.navigate(['/login'], { replaceUrl: true });
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+    }
+  }
+
+  async onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      this.isUploading = true;
+
+      const newAvatarUrl = await this.authService.uploadAvatar(file, this.userId);
+
+      this.userAvatar = newAvatarUrl;
+
+    } catch (error) {
+      console.error('Pilló un error al subir la foto:', error);
+    } finally {
+      this.isUploading = false;
     }
   }
 }
