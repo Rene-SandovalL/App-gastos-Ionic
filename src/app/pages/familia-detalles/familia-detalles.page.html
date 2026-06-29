@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil" icon="arrow-back-outline" text="" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">Mi Familia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detalles-content">
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  } @else if (familia) {
+    <div class="page-container">
+
+      <!-- Tarjeta principal de la familia -->
+      <div class="familia-bubble">
+        <ion-icon name="people-circle-outline" class="familia-icon"></ion-icon>
+        <h1 class="familia-nombre">{{ familia.nombre }}</h1>
+        <div class="rol-badge" [class.rol-padre]="miembro?.rol === 'padre'" [class.rol-hijo]="miembro?.rol === 'hijo'">
+          <ion-icon [name]="miembro?.rol === 'padre' ? 'shield-checkmark-outline' : 'person-outline'"></ion-icon>
+          <span>{{ miembro?.rol === 'padre' ? 'Padre / Titular' : 'Miembro' }}</span>
+        </div>
+      </div>
+
+      <!-- Acción invitar -->
+      <p class="input-label">Acciones</p>
+      <div class="action-card" (click)="modalInvitarAbierto = true">
+        <div class="action-card-icon blue">
+          <ion-icon name="share-outline"></ion-icon>
+        </div>
+        <div class="action-card-text">
+          <span class="action-card-title">Invitar personas</span>
+          <span class="action-card-sub">Comparte el código de tu familia</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
+      </div>
+
+    </div>
+  } @else {
+    <div class="page-container">
+      <p class="ion-text-center" style="color: #4b5563; margin-top: 40px;">No se encontró información de tu familia.</p>
+    </div>
+  }
+
+  <!-- Modal de invitación -->
+  <ion-modal [isOpen]="modalInvitarAbierto" (didDismiss)="modalInvitarAbierto = false" [initialBreakpoint]="0.55" [breakpoints]="[0, 0.55]">
+    <ng-template>
+      <div class="modal-wrapper ion-padding">
+        <div class="modal-handle"></div>
+        <h2 class="modal-title">Código de Invitación</h2>
+        <p class="modal-hint">Comparte este código con quien quieras añadir a tu familia.</p>
+
+        <div class="codigo-display">
+          {{ familia?.codigo_invitacion }}
+        </div>
+
+        <ion-button expand="block" class="primary-btn" (click)="copiarCodigo()" [color]="copiado ? 'success' : 'primary'">
+          <ion-icon slot="start" name="copy-outline"></ion-icon>
+          {{ copiado ? '¡Copiado!' : 'Copiar al portapapeles' }}
+        </ion-button>
+        <ion-button expand="block" fill="clear" class="back-btn" (click)="modalInvitarAbierto = false">
+          Cerrar
+        </ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

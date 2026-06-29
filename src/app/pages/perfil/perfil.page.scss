@@ -78,6 +78,8 @@ ion-toolbar {
 .logout-item {
   --background: #f79b9b;
   --color: #eb3831;
+  margin: 10px;
+  border-radius: 8px;
 }
 
 .profile-toolbar {
@@ -134,4 +136,13 @@ ion-title {
   &:active {
     transform: scale(0.9);
   }
+}
+
+.family-item {
+  --background: #f0f4ff;
+  --color: #1f5de2;
+  --border-color: #d0e0ff;
+  --border-width: 1px;
+  border-radius: 8px;
+  margin: 10px;
 }

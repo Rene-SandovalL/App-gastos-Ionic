@@ -1,0 +1,114 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil" icon="arrow-back-outline" text="" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">Plan Familiar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="setup-content">
+
+  <!-- Vista: Opciones iniciales -->
+  @if (vista === 'opciones') {
+    <div class="page-container">
+      <div class="section-header">
+        <ion-icon name="people-outline" class="section-icon"></ion-icon>
+        <h2 class="section-title">Empieza tu Plan Familiar</h2>
+        <p class="section-subtitle">Controla los gastos junto a tu familia. Elige cómo quieres comenzar.</p>
+      </div>
+
+      <div class="action-list">
+        <div class="action-card" (click)="vista = 'crear'">
+          <div class="action-card-icon blue">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <div class="action-card-text">
+            <span class="action-card-title">Crear Nueva Familia</span>
+            <span class="action-card-sub">Sé el titular y administra tu grupo</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
+        </div>
+
+        <div class="action-card" (click)="vista = 'unirse'">
+          <div class="action-card-icon gray">
+            <ion-icon name="key-outline"></ion-icon>
+          </div>
+          <div class="action-card-text">
+            <span class="action-card-title">Tengo un Código</span>
+            <span class="action-card-sub">Únete a una familia existente</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Vista: Crear familia -->
+  @if (vista === 'crear') {
+    <div class="page-container">
+      <h2 class="section-title">Nueva Familia</h2>
+      <p class="section-subtitle">Pon un nombre a tu grupo familiar.</p>
+
+      <p class="input-label">Nombre de la Familia</p>
+      <div class="custom-bubble">
+        <ion-input
+          [(ngModel)]="nombreFamilia"
+          placeholder="Ej: Los García"
+          [disabled]="isLoading">
+        </ion-input>
+      </div>
+
+      <ion-button expand="block" class="primary-btn" (click)="onCrearFamilia()" [disabled]="isLoading">
+        @if (isLoading) {
+          <ion-spinner name="crescent" color="light"></ion-spinner>
+        } @else {
+          Crear Familia
+        }
+      </ion-button>
+      <ion-button expand="block" fill="clear" class="back-btn" (click)="vista = 'opciones'" [disabled]="isLoading">
+        Volver
+      </ion-button>
+    </div>
+  }
+
+  <!-- Vista: Unirse con código -->
+  @if (vista === 'unirse') {
+    <div class="page-container">
+      <h2 class="section-title">Unirse a una Familia</h2>
+      <p class="section-subtitle">Introduce el código de 6 caracteres que te compartió un familiar.</p>
+
+      <p class="input-label">Código de Invitación</p>
+      <div class="custom-bubble codigo-bubble">
+        <ion-input
+          [(ngModel)]="codigoInvitacion"
+          placeholder="AB12CD"
+          maxlength="6"
+          [disabled]="isLoading">
+        </ion-input>
+      </div>
+
+      <ion-button expand="block" class="primary-btn" (click)="onUnirseAFamilia()" [disabled]="isLoading">
+        @if (isLoading) {
+          <ion-spinner name="crescent" color="light"></ion-spinner>
+        } @else {
+          Unirme
+        }
+      </ion-button>
+      <ion-button expand="block" fill="clear" class="back-btn" (click)="vista = 'opciones'" [disabled]="isLoading">
+        Volver
+      </ion-button>
+    </div>
+  }
+
+  <ion-toast
+    [isOpen]="mostrarToast"
+    [message]="toastMensaje"
+    [color]="toastColor"
+    duration="3000"
+    position="bottom"
+    (didDismiss)="mostrarToast = false">
+  </ion-toast>
+
+</ion-content>
+

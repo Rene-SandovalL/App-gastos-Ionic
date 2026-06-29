@@ -22,7 +22,7 @@
 
 .logo-icon {
 	font-size: 82px;
-	color: #d946ef;
+	color: #3811e2;
 	filter: saturate(1.2);
 }
 
@@ -48,7 +48,25 @@
 	--highlight-color-focused: transparent;
 	--highlight-color-valid: transparent;
 	--highlight-color-invalid: transparent;
+  caret-color: #0095f6 !important;
+  --caret-color: #0095f6 !important;
+
+  &::part(native) {
+    caret-color: #0095f6 !important;
+
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+
+
+  input {
+    caret-color: #0095f6 !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
 }
+
+
 
 .primary-btn {
 	--background: #1668d2;

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonList, IonItem, IonIcon, IonLabel, IonButton, IonSpinner } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { logOutOutline, personCircle, notificationsOutline, imageOutline } from 'ionicons/icons';
+import { logOutOutline, personCircle, notificationsOutline, imageOutline, peopleOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { FamiliaService } from '../../services/familia.service';
+import { Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -24,25 +25,31 @@ export class PerfilPage implements OnInit {
   isUploading: boolean = false;
   userId: string = '';
 
+  tieneFamilia: boolean = false;
+  isCheckingFamilia: boolean = true;
+
   constructor(
     private authService: AuthService,
+    private familiaService: FamiliaService,
     private router: Router
   ) {
-    addIcons({imageOutline,logOutOutline,personCircle,notificationsOutline});
+    addIcons({imageOutline,peopleOutline,logOutOutline,personCircle,notificationsOutline});
   }
+
   async ngOnInit() {
     const user = await this.authService.getSession().then(res => res.session?.user);
 
     if (user) {
       this.userId = user.id;
-
       this.userEmail = user.email || '';
       this.userName = user.user_metadata?.['full_name'] || user.user_metadata?.['username'] || 'Usuario';
-
       this.userAvatar = user.user_metadata?.['avatar_url'] || null;
-
       this.generateInitials(this.userName);
+
+      const { data } = await this.familiaService.getMiembroConFamilia(user.id);
+      this.tieneFamilia = data !== null;
     }
+    this.isCheckingFamilia = false;
   }
 
   generateInitials(name: string) {
@@ -78,6 +85,14 @@ export class PerfilPage implements OnInit {
       console.error('Pilló un error al subir la foto:', error);
     } finally {
       this.isUploading = false;
+    }
+  }
+
+  onCreateFamily() {
+    if (this.tieneFamilia) {
+      this.router.navigate(['/familia-detalles']);
+    } else {
+      this.router.navigate(['/familia-setup']);
     }
   }
 }

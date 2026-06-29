@@ -33,6 +33,20 @@ export const routes: Routes = [
   },
   {
     path: 'perfil',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/perfil/perfil.page').then( m => m.PerfilPage)
+  },
+  {
+    path: 'gastos-familia',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/gastos-familia/gastos-familia.page').then( m => m.GastosFamiliaPage)
+  },
+  {
+    path: 'familia-setup',
+    loadComponent: () => import('./pages/familia-setup/familia-setup.page').then( m => m.FamiliaSetupPage)
+  },
+  {
+    path: 'familia-detalles',
+    loadComponent: () => import('./pages/familia-detalles/familia-detalles.page').then( m => m.FamiliaDetallesPage)
   }
 ];

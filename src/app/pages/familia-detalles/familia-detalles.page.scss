@@ -1,0 +1,205 @@
+// ---- Variables compartidas con la app ----
+$bg: #f5f7fb;
+$blue: #1f5de2;
+$blue-light: #e8efff;
+$text-dark: #1a1a1a;
+$text-label: #4b5563;
+$text-muted: #9ca3af;
+$card-bg: #ffffff;
+$card-border: #e3e9f3;
+$radius-card: 20px;
+
+:host {
+  --ion-background-color: #{$bg};
+}
+
+ion-toolbar {
+  --background: #{$bg};
+  --border-color: transparent;
+  padding: 6px 8px 4px;
+}
+
+ion-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: $blue;
+}
+
+.detalles-content {
+  --background: #{$bg};
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.page-container {
+  padding: 20px 20px 40px;
+}
+
+// Tarjeta principal de la familia
+.familia-bubble {
+  background: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $radius-card;
+  padding: 32px 20px;
+  text-align: center;
+  margin-bottom: 28px;
+
+  .familia-icon {
+    font-size: 72px;
+    color: $blue;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .familia-nombre {
+    font-size: 26px;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 14px;
+  }
+}
+
+.rol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  &.rol-padre {
+    background: $blue-light;
+    color: $blue;
+  }
+
+  &.rol-hijo {
+    background: #f0f0f0;
+    color: #6b7280;
+  }
+}
+
+// Label de sección
+.input-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-label;
+  margin: 0 0 8px 8px;
+}
+
+// Tarjeta de acción (mismo patrón que familia-setup)
+.action-card {
+  background: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $radius-card;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:active {
+    box-shadow: 0 2px 8px rgba(31, 93, 226, 0.12);
+  }
+
+  .action-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+
+    &.blue {
+      background: $blue-light;
+      color: $blue;
+    }
+  }
+
+  .action-card-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .action-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: $text-dark;
+    }
+    .action-card-sub {
+      font-size: 12px;
+      color: $text-muted;
+    }
+  }
+
+  .action-card-arrow {
+    font-size: 18px;
+    color: $text-muted;
+  }
+}
+
+// Modal
+.modal-wrapper {
+  padding-top: 20px;
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text-dark;
+  text-align: center;
+  margin: 0 0 6px;
+}
+
+.modal-hint {
+  font-size: 14px;
+  color: $text-muted;
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+.codigo-display {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 10px;
+  color: $blue;
+  background: $blue-light;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.primary-btn {
+  --background: #{$blue};
+  --border-radius: 14px;
+  --box-shadow: 0 4px 12px rgba(31, 93, 226, 0.3);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.back-btn {
+  --color: #{$text-label};
+  font-weight: 500;
+}
