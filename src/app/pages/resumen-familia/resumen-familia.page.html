@@ -1,0 +1,115 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/familia-detalles" icon="arrow-back-outline" text="" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">Resumen</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="resumen-content">
+  <div class="page">
+    <p class="page-subtitle">Análisis de las finanzas familiares este mes</p>
+
+    @if (isLoading) {
+      <div class="loading-container">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+    } @else {
+
+      <!-- Tarjeta azul total -->
+      <ion-card class="summary-card">
+        <ion-card-content>
+          <p class="summary-label">TOTAL ACUMULADO</p>
+          <h2 class="summary-amount">{{ totalMes | currency:'USD':'symbol':'1.2-2' }}</h2>
+          <div class="summary-pill">
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <span>{{ totalCount }} gastos registrados</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Tarjeta gráfica dona -->
+      <ion-card class="chart-card">
+        <ion-card-content>
+          <div class="chart-container">
+            <div class="chart-donut" [style.--donut-gradient]="donutGradient"></div>
+            <div class="chart-label">
+              <span class="title">Gastos</span>
+              <span class="value">{{ totalMes > 0 ? '100%' : '0%' }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      @if (categoryBreakdown.length > 0) {
+        <!-- Tarjeta verde destacada -->
+        <ion-card class="highlight-card">
+          <ion-card-content>
+            <div class="highlight-header">
+              <div class="highlight-icon">
+                <ion-icon name="trending-up-outline"></ion-icon>
+              </div>
+              <div>
+                <p>Categoría con más gastos</p>
+                <strong>{{ topCategoryLabel }} ({{ topCategoryPercent }}%)</strong>
+              </div>
+            </div>
+            <ion-progress-bar class="progress-bar" [value]="topCategoryPercent / 100"></ion-progress-bar>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Desglose por categoría -->
+        <h2 class="section-title">DESGLOSE POR CATEGORÍA</h2>
+        <ion-list class="category-list">
+          @for (cat of categoryBreakdown; track cat.label) {
+            <ion-item class="category-item" lines="none">
+              <div class="category-icon" [style.background]="cat.color + '22'" [style.color]="cat.color">
+                <ion-icon [name]="cat.icon"></ion-icon>
+              </div>
+              <ion-label class="category-info">
+                <h3>{{ cat.label }}</h3>
+                <p>{{ cat.percent }}% del total</p>
+              </ion-label>
+              <ion-label slot="end" class="category-amount">
+                {{ cat.amount | currency:'USD':'symbol':'1.2-2' }}
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      }
+
+      <!-- Desglose por integrante -->
+      @if (integrantesResumen.length > 0) {
+        <h2 class="section-title" style="margin-top: 20px;">DESGLOSE POR INTEGRANTE</h2>
+        <ion-list class="category-list">
+          @for (integrante of integrantesResumen; track integrante.user_id) {
+            <ion-item class="category-item" lines="none">
+              <div class="integrante-avatar">
+                @if (integrante.avatar_url) {
+                  <img [src]="integrante.avatar_url" [alt]="integrante.nombre" />
+                } @else {
+                  <span>{{ integrante.iniciales }}</span>
+                }
+              </div>
+              <ion-label class="category-info">
+                <h3>{{ integrante.nombre }}</h3>
+                <p>{{ integrante.rol === 'padre' ? 'Padre / Titular' : 'Miembro' }}</p>
+              </ion-label>
+              <ion-label slot="end" class="category-amount">
+                {{ integrante.total | currency:'USD':'symbol':'1.2-2' }}
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      }
+
+      @if (totalCount === 0) {
+        <div class="empty-state">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          <p>Sin gastos registrados este mes</p>
+        </div>
+      }
+    }
+  </div>
+</ion-content>

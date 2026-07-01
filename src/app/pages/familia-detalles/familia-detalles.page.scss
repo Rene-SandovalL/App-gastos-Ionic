@@ -1,4 +1,3 @@
-// ---- Variables compartidas con la app ----
 $bg: #f5f7fb;
 $blue: #1f5de2;
 $blue-light: #e8efff;
@@ -52,7 +51,7 @@ ion-title {
   .familia-icon {
     font-size: 72px;
     color: $blue;
-    margin-bottom: 12px;
+    margin: 0 auto 12px;
     display: block;
   }
 
@@ -73,22 +72,12 @@ ion-title {
   font-size: 13px;
   font-weight: 600;
 
-  ion-icon {
-    font-size: 16px;
-  }
+  ion-icon { font-size: 16px; }
 
-  &.rol-padre {
-    background: $blue-light;
-    color: $blue;
-  }
-
-  &.rol-hijo {
-    background: #f0f0f0;
-    color: #6b7280;
-  }
+  &.rol-padre { background: $blue-light; color: $blue; }
+  &.rol-hijo  { background: #f0f0f0;    color: #6b7280; }
 }
 
-// Label de sección
 .input-label {
   font-size: 16px;
   font-weight: 600;
@@ -96,7 +85,13 @@ ion-title {
   margin: 0 0 8px 8px;
 }
 
-// Tarjeta de acción (mismo patrón que familia-setup)
+// Grupo de tarjetas con separación entre ellas
+.action-cards-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .action-card {
   background: $card-bg;
   border: 1px solid $card-border;
@@ -122,10 +117,8 @@ ion-title {
     flex-shrink: 0;
     font-size: 22px;
 
-    &.blue {
-      background: $blue-light;
-      color: $blue;
-    }
+    &.blue  { background: $blue-light; color: $blue; }
+    &.green { background: #d4f5e4;    color: #1a7a46; }
   }
 
   .action-card-text {
@@ -151,9 +144,45 @@ ion-title {
   }
 }
 
+// Avatar de integrante en la lista
+.integrante-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: $blue-light;
+  color: $blue;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Badge de rol pequeño para la lista de integrantes
+.rol-badge-sm {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+
+  &.rol-padre { background: $blue-light; color: $blue; }
+  &.rol-hijo  { background: #f0f0f0;    color: #6b7280; }
+}
+
 // Modal
 .modal-wrapper {
-  padding-top: 20px;
+  background: $card-bg;
+  min-height: 100%;
+  padding: 20px 20px 40px;
 }
 
 .modal-handle {

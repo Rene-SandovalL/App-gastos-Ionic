@@ -48,15 +48,16 @@
   @if (vista === 'crear') {
     <div class="page-container">
       <h2 class="section-title">Nueva Familia</h2>
-      <p class="section-subtitle">Pon un nombre a tu grupo familiar.</p>
 
-      <p class="input-label">Nombre de la Familia</p>
-      <div class="custom-bubble">
-        <ion-input
-          [(ngModel)]="nombreFamilia"
-          placeholder="Ej: Los García"
-          [disabled]="isLoading">
-        </ion-input>
+      <div class="form-section">
+        <p class="input-label">Nombre de la Familia</p>
+        <div class="custom-bubble">
+          <ion-input
+            [(ngModel)]="nombreFamilia"
+            placeholder="Ej: Los García"
+            [disabled]="isLoading">
+          </ion-input>
+        </div>
       </div>
 
       <ion-button expand="block" class="primary-btn" (click)="onCrearFamilia()" [disabled]="isLoading">
@@ -77,7 +78,7 @@
     <div class="page-container">
       <h2 class="section-title">Unirse a una Familia</h2>
       <p class="section-subtitle">Introduce el código de 6 caracteres que te compartió un familiar.</p>
-
+      <br>
       <p class="input-label">Código de Invitación</p>
       <div class="custom-bubble codigo-bubble">
         <ion-input

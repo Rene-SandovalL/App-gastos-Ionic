@@ -49,6 +49,7 @@ import { Router } from '@angular/router';
 import { GastosService } from '../../services/gastos.service';
 import { categoria, gastos } from '../../models/gasto.model';
 import { SupabaseService } from '../../services/supabase.service';
+import { FamiliaService } from '../../services/familia.service';
 
 @Component({
   selector: 'app-nuevo-gasto',
@@ -124,6 +125,7 @@ export class NuevoGastoPage implements OnInit {
     private formBuilder: NonNullableFormBuilder,
     private gastosService: GastosService,
     private supabaseService: SupabaseService,
+    private familiaService: FamiliaService,
     private router: Router
   ) {
     addIcons({
@@ -311,6 +313,17 @@ export class NuevoGastoPage implements OnInit {
     this.guardandoCategoria = true;
     this.errorNuevaCategoria = null;
 
+    const { data: authData, error: authError } = await this.supabaseService
+      .getClient()
+      .auth
+      .getUser();
+
+    if (authError || !authData.user) {
+      this.errorNuevaCategoria = authError?.message ?? 'No hay sesión activa.';
+      this.guardandoCategoria = false;
+      return;
+    }
+
     const { data, error } = await this.supabaseService
       .getClient()
       .from('categorias')
@@ -318,6 +331,7 @@ export class NuevoGastoPage implements OnInit {
         nombre,
         color: this.nuevaCategoria.color,
         icono: this.nuevaCategoria.icono,
+        user_id: authData.user.id,
       })
       .select('id')
       .single();
@@ -326,6 +340,15 @@ export class NuevoGastoPage implements OnInit {
       this.errorNuevaCategoria = error.message;
       this.guardandoCategoria = false;
       return;
+    }
+
+    const { data: miembroData } = await this.familiaService.getMiembroConFamilia(authData.user.id);
+    if (miembroData?.familia_id) {
+      const { error: syncError } = await this.familiaService.syncCategoriasFamilia(miembroData.familia_id);
+      if (syncError) {
+        // La categoría ya fue creada; avisamos pero no bloqueamos el flujo.
+        this.errorMessage = 'Categoría creada, pero falló su sincronización familiar.';
+      }
     }
 
     await this.loadCategorias();

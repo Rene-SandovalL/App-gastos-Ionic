@@ -47,6 +47,17 @@ export const routes: Routes = [
   },
   {
     path: 'familia-detalles',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/familia-detalles/familia-detalles.page').then( m => m.FamiliaDetallesPage)
+  },
+  {
+    path: 'resumen-familia',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/resumen-familia/resumen-familia.page').then( m => m.ResumenFamiliaPage)
+  },
+  {
+    path: 'gastos-integrante/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/gastos-integrante/gastos-integrante.page').then( m => m.GastosIntegrantePage)
   }
 ];

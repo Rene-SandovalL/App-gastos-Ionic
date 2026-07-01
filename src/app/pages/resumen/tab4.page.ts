@@ -30,6 +30,7 @@ import {
 } from 'ionicons/icons';
 import { GastosService } from '../../services/gastos.service';
 import { categoria, gastos } from '../../models/gasto.model';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tab4',
@@ -48,6 +49,7 @@ import { categoria, gastos } from '../../models/gasto.model';
     IonCardContent,
     IonList,
     IonItem,
+    RouterLink,
     IonLabel,
     IonText,
     IonProgressBar,

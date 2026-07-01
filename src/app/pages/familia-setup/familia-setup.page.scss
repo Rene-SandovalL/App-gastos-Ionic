@@ -43,7 +43,9 @@ ion-title {
   font-size: 64px;
   color: $blue;
   margin-bottom: 12px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .section-title {
@@ -57,6 +59,11 @@ ion-title {
   font-size: 14px;
   color: $text-muted;
   margin: 0;
+}
+
+// Separación entre título y formulario
+.form-section {
+  margin-top: 32px;
 }
 
 // Lista de opciones tipo tarjeta

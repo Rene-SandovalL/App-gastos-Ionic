@@ -7,6 +7,7 @@ export interface categoria {
 
 export interface gastos {
 	id: number;
+	user_id: string;
 	created_at: string;
 	concepto: string;
 	monto: number;

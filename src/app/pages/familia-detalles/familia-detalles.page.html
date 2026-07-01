@@ -26,17 +26,53 @@
         </div>
       </div>
 
-      <!-- Acción invitar -->
+      <!-- Acciones -->
       <p class="input-label">Acciones</p>
-      <div class="action-card" (click)="modalInvitarAbierto = true">
-        <div class="action-card-icon blue">
-          <ion-icon name="share-outline"></ion-icon>
+      <div class="action-cards-group">
+        <div class="action-card" (click)="modalInvitarAbierto = true">
+          <div class="action-card-icon blue">
+            <ion-icon name="share-outline"></ion-icon>
+          </div>
+          <div class="action-card-text">
+            <span class="action-card-title">Invitar personas</span>
+            <span class="action-card-sub">Comparte el código de tu familia</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
         </div>
-        <div class="action-card-text">
-          <span class="action-card-title">Invitar personas</span>
-          <span class="action-card-sub">Comparte el código de tu familia</span>
+
+        <div class="action-card" (click)="irAResumen()">
+          <div class="action-card-icon green">
+            <ion-icon name="bar-chart-outline"></ion-icon>
+          </div>
+          <div class="action-card-text">
+            <span class="action-card-title">Ver resumen de mi familia</span>
+            <span class="action-card-sub">Gastos y estadísticas del mes</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
         </div>
-        <ion-icon name="chevron-forward-outline" class="action-card-arrow"></ion-icon>
+      </div>
+
+      <!-- Integrantes -->
+      <p class="input-label" style="margin-top: 24px;">Integrantes</p>
+      <div class="action-cards-group">
+        @for (integrante of integrantes; track integrante.user_id) {
+          <div class="action-card" (click)="irAGastosIntegrante(integrante.user_id)">
+            <div class="integrante-avatar">
+              @if (integrante.avatar_url) {
+                <img [src]="integrante.avatar_url" [alt]="integrante.nombre" />
+              } @else {
+                <span>{{ integrante.iniciales }}</span>
+              }
+            </div>
+            <div class="action-card-text">
+              <span class="action-card-title">{{ integrante.nombre }}</span>
+              <span class="action-card-sub">{{ integrante.rol === 'padre' ? 'Padre / Titular' : 'Miembro' }}</span>
+            </div>
+            <div class="rol-badge-sm" [class.rol-padre]="integrante.rol === 'padre'" [class.rol-hijo]="integrante.rol === 'hijo'">
+              {{ integrante.rol === 'padre' ? 'Padre' : 'Miembro' }}
+            </div>
+          </div>
+        }
       </div>
 
     </div>
@@ -49,7 +85,7 @@
   <!-- Modal de invitación -->
   <ion-modal [isOpen]="modalInvitarAbierto" (didDismiss)="modalInvitarAbierto = false" [initialBreakpoint]="0.55" [breakpoints]="[0, 0.55]">
     <ng-template>
-      <div class="modal-wrapper ion-padding">
+      <div class="modal-wrapper">
         <div class="modal-handle"></div>
         <h2 class="modal-title">Código de Invitación</h2>
         <p class="modal-hint">Comparte este código con quien quieras añadir a tu familia.</p>

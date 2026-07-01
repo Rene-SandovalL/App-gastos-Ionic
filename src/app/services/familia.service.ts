@@ -16,6 +16,15 @@ export interface MiembroFamilia {
   familias?: Familia;
 }
 
+export interface Integrante {
+  miembro_id: string;
+  user_id: string;
+  rol: 'padre' | 'hijo';
+  nombre: string;
+  avatar_url: string | null;
+  iniciales: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -64,7 +73,22 @@ export class FamiliaService {
       .from('miembros_familia')
       .insert({ familia_id: familiaId, user_id: userId, rol: 'padre' });
 
-    return { error: errorMiembro?.message ?? null };
+    if (errorMiembro) {
+      return { error: errorMiembro.message };
+    }
+
+    const { error: errorSync } = await client
+      .rpc('sync_categorias_familia', { p_familia_id: familiaId });
+
+    if (errorSync) {
+      return {
+        error:
+          'La familia fue creada, pero falló la sincronización de categorías. ' +
+          'Verifica que exista la función SQL sync_categorias_familia.'
+      };
+    }
+
+    return { error: null };
   }
 
   /** Une a un usuario a una familia existente mediante el código de invitación */
@@ -83,7 +107,59 @@ export class FamiliaService {
       .from('miembros_familia')
       .insert({ familia_id: familiaId, user_id: userId, rol: 'hijo' });
 
-    return { error: errorMiembro?.message ?? null };
+    if (errorMiembro) {
+      return { error: errorMiembro.message };
+    }
+
+    // Sincroniza categorías entre todos los miembros de la familia.
+    // Requiere función SQL SECURITY DEFINER: public.sync_categorias_familia(uuid)
+    const { error: errorSync } = await client
+      .rpc('sync_categorias_familia', { p_familia_id: familiaId });
+
+    if (errorSync) {
+      return {
+        error:
+          'Te uniste a la familia, pero falló la sincronización de categorías. ' +
+          'Verifica que exista la función SQL sync_categorias_familia.'
+      };
+    }
+
+    return { error: null };
+  }
+
+  /** Obtiene todos los integrantes de una familia con su perfil (usa RPC SECURITY DEFINER) */
+  async getMiembrosDeFamilia(familiaId: string): Promise<{ data: Integrante[]; error: string | null }> {
+    const { data, error } = await this.supabaseService
+      .getClient()
+      .rpc('get_miembros_familia', { p_familia_id: familiaId });
+
+    if (error) return { data: [], error: error.message };
+
+    const integrantes: Integrante[] = ((data as any[]) ?? []).map(m => ({
+      miembro_id: m.miembro_id,
+      user_id:    m.user_id,
+      rol:        m.rol as 'padre' | 'hijo',
+      nombre:     m.nombre ?? 'Usuario',
+      avatar_url: m.avatar_url ?? null,
+      iniciales:  this.generarIniciales(m.nombre ?? 'Usuario'),
+    }));
+
+    return { data: integrantes, error: null };
+  }
+
+  /** Fuerza sincronización de categorías entre miembros de la familia */
+  async syncCategoriasFamilia(familiaId: string): Promise<{ error: string | null }> {
+    const { error } = await this.supabaseService
+      .getClient()
+      .rpc('sync_categorias_familia', { p_familia_id: familiaId });
+
+    return { error: error?.message ?? null };
+  }
+
+  private generarIniciales(nombre: string): string {
+    const parts = nombre.trim().split(' ').filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return nombre.substring(0, 2).toUpperCase();
   }
 }
 

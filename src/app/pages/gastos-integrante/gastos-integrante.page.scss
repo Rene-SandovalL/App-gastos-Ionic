@@ -1,0 +1,202 @@
+$bg: #f5f7fb;
+$blue: #1f5de2;
+$blue-light: #e8efff;
+$text-dark: #1a1a1a;
+$text-muted: #9ca3af;
+$card-bg: #ffffff;
+$card-border: #e3e9f3;
+$radius-card: 20px;
+
+:host { --ion-background-color: #{$bg}; }
+
+ion-toolbar { --background: #{$bg}; --border-color: transparent; padding: 6px 8px 4px; }
+ion-title   { font-size: 28px; font-weight: 600; color: $blue; }
+
+.gastos-content { --background: #{$bg}; }
+
+.page { padding: 16px 18px 40px; }
+
+// ── Filtros tipo badges/chips ───────────────────────
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filter-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.filter-row::-webkit-scrollbar-thumb {
+  background: rgba(154, 166, 178, 0.4);
+  border-radius: 6px;
+}
+
+.filter-chip {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  --background: #e9edf4;
+  --color: #48525c;
+  background: #e9edf4;
+  color: #48525c;
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.filter-chip span {
+  white-space: nowrap;
+}
+
+.filter-chip.active {
+  background: #0b5bd3;
+  color: #ffffff;
+  box-shadow: 0 10px 18px rgba(11, 91, 211, 0.28);
+}
+
+.filter-divider {
+  width: 1px;
+  height: 28px;
+  background: #d9dfe7;
+  flex: 0 0 auto;
+}
+
+// ── Resumen del período ───────────────────────────────
+.period-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $radius-card;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.period-label {
+  font-size: 14px;
+  color: $text-muted;
+  font-weight: 500;
+}
+
+.period-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: $blue;
+}
+
+// ── Lista de gastos ───────────────────────────────────
+.gastos-list { display: grid; gap: 6px; background: transparent; padding: 0; margin: 0; }
+
+.gasto-item {
+  --background: #{$card-bg};
+  --background-activated: #{$card-bg};
+  --min-height: 70px;
+  border-radius: $radius-card;
+  box-shadow: 0 8px 16px rgba(19,29,42,0.07);
+}
+.gasto-item::part(native) { border-radius: $radius-card; padding: 10px; background: $card-bg; }
+
+.gasto-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: grid; place-items: center;
+  font-size: 20px; flex-shrink: 0; margin-right: 12px;
+
+  &.tech        { background: $blue-light; color: $blue; }
+  &.comida      { background: #ffe8d1; color: #f57c00; }
+  &.transporte  { background: #e8f5e9; color: #388e3c; }
+  &.servicios   { background: #fde4e4; color: #d32f2f; }
+  &.salud       { background: #fce4ec; color: #c2185b; }
+}
+
+.gasto-info h3 { font-size: 14px; font-weight: 600; color: $text-dark; margin: 0 0 2px; }
+.gasto-info p  { font-size: 12px; color: $text-muted; margin: 0; }
+
+.gasto-monto {
+  font-size: 14px;
+  font-weight: 700;
+  color: $text-dark;
+  white-space: nowrap;
+}
+
+// ── Estado vacío ──────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0;
+  gap: 12px;
+  color: $text-muted;
+
+  ion-icon { font-size: 52px; }
+  p { font-size: 15px; margin: 0; }
+}
+
+// ── Loading ───────────────────────────────────────────
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 0;
+}
+
+// ── Modal selector de fecha (estilo Mis gastos) ───────────────────────────
+.date-modal-content {
+  --background: #f5f7fb;
+}
+
+.date-modal-layout {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 20px;
+}
+
+.month-modal-layout {
+  min-height: 100%;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 6px 0 10px;
+}
+
+.date-picker {
+  padding: 16px 18px 0;
+}
+
+.date-label {
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: #2b343d;
+  text-align: center;
+}
+
+.month-modal-layout .date-picker {
+  padding-top: 8px;
+}
+
+.month-modal-layout .date-picker.centered {
+  justify-content: flex-start;
+}
+
+.month-confirm-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  padding-bottom: 8px;
+}
+
+.month-confirm-btn {
+  min-width: 160px;
+}

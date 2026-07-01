@@ -18,7 +18,7 @@ import {
   CameraPreviewOptions,
   CameraPreviewPictureOptions,
 } from '@capacitor-community/camera-preview';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
@@ -26,6 +26,7 @@ import {
   imageOutline,
   trashOutline,
   sparkles,
+  personCircle,
 } from 'ionicons/icons';
 import { GeminiService } from '../../services/gemini.service';
 @Component({
@@ -43,6 +44,7 @@ import { GeminiService } from '../../services/gemini.service';
     IonIcon,
     IonSpinner,
     CommonModule,
+    RouterLink,
   ],
 })
 export class Tab3Page implements OnDestroy {
@@ -50,7 +52,7 @@ export class Tab3Page implements OnDestroy {
     private router: Router,
     private geminiService: GeminiService
   ) {
-    addIcons({ cameraOutline, imageOutline, trashOutline, sparkles });
+    addIcons({ cameraOutline, imageOutline, trashOutline, sparkles, personCircle });
   }
 
   @ViewChild('webVideo') webVideo!: ElementRef<HTMLVideoElement>;

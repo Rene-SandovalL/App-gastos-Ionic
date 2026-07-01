@@ -1,0 +1,105 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/familia-detalles" icon="arrow-back-outline" text="" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">{{ integranteNombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="gastos-content">
+  <div class="page">
+
+    <div class="filter-row">
+      <button type="button" class="filter-chip" (click)="openMonthModal()">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ mesLabel || 'Mes' }}</span>
+      </button>
+      <div class="filter-divider"></div>
+      @for (filtro of filtrosCategoria; track filtro) {
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="categoriaActiva === filtro"
+          (click)="setFiltroCategoria(filtro)">
+          <span>{{ filtro }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Resumen del período -->
+    <div class="period-summary">
+      <span class="period-label">
+        @if (isLoading) { Cargando… } @else { {{ gastosFiltrados.length }} gastos }
+      </span>
+      <span class="period-total">{{ totalFiltrado | currency:'USD':'symbol':'1.2-2' }}</span>
+    </div>
+
+    <!-- Lista de gastos -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+    } @else if (gastosFiltrados.length > 0) {
+      <ion-list class="gastos-list">
+        @for (gasto of gastosFiltrados; track gasto.id) {
+          <ion-item class="gasto-item" lines="none">
+            <div class="gasto-icon" [style.background]="(gasto.categorias?.color || '#9ca3af') + '22'" [style.color]="gasto.categorias?.color || '#9ca3af'">
+              <ion-icon [name]="gasto.categorias?.icono || 'cart-outline'"></ion-icon>
+            </div>
+            <ion-label class="gasto-info">
+              <h3>{{ gasto.concepto }}</h3>
+              <p>{{ gasto.categorias?.nombre || 'Sin categoría' }}</p>
+              <p>{{ gasto.fecha_gasto | date:'MMMM yyyy':'':'es' }}</p>
+            </ion-label>
+            <ion-note slot="end" class="gasto-monto">
+              {{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}
+            </ion-note>
+          </ion-item>
+        }
+      </ion-list>
+    } @else {
+      <div class="empty-state">
+        <ion-icon name="cart-outline"></ion-icon>
+        <p>Sin gastos para este período</p>
+      </div>
+    }
+
+  </div>
+</ion-content>
+
+<!-- Modal selector de mes -->
+<ion-modal
+  cssClass="gastos-sheet-modal"
+  [isOpen]="modalFechaAbierto"
+  [breakpoints]="[0, 0.62]"
+  [initialBreakpoint]="0.62"
+  (didDismiss)="closeMonthModal()"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Seleccionar mes</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeMonthModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="date-modal-content month-modal-content">
+      <div class="date-modal-layout month-modal-layout">
+        <div class="date-picker centered">
+          <p class="date-label">Mes y año</p>
+          <ion-datetime
+            presentation="month-year"
+            preferWheel="true"
+            [value]="monthPickerValue"
+            (ionChange)="onMonthChange($event.detail.value)"
+          ></ion-datetime>
+          <div class="month-confirm-wrap">
+            <ion-button class="month-confirm-btn" (click)="applySelectedMonth()">Confirmar</ion-button>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

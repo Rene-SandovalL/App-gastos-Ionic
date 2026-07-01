@@ -145,6 +145,11 @@ export class Tab2Page implements OnInit {
     await this.loadGastos(true);
   }
 
+  async ionViewWillEnter(): Promise<void> {
+    await this.loadCategorias();
+    await this.loadGastos(true);
+  }
+
   private initializeCurrentMonthRange(): void {
     const today = new Date();
     this.applyMonthFromDate(today);
